@@ -1,8 +1,11 @@
 # Decisión Arquitectónica 003: Uso de IIS como Servidor Web
 
-**Estado**: Aceptado  
+**Estado**: Superseded by [ADR-006](006-python-backend.md)  
 **Fecha**: 2025-11-14  
 **Decisores**: Equipo de Arquitectura  
+**Superseded Date**: 2025-11-14
+
+> **Nota**: Esta decisión fue reemplazada por ADR-006 (Python Backend), que utiliza Uvicorn como servidor ASGI en lugar de IIS.  
 
 ## Contexto
 

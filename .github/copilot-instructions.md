@@ -4,9 +4,9 @@
 
 Este es un sistema de microservicios distribuidos construido con arquitectura orientada a eventos. El proyecto utiliza:
 
-- **BIT**: Plataforma de componentes para desarrollo modular
-- **IIS**: Internet Information Services como servidor web
-- **Event-Driven Architecture**: Comunicación asíncrona entre servicios
+- **Frontend**: React 18+ con Vite como build tool y TypeScript
+- **Backend**: Python 3.12+ con FastAPI para microservicios
+- **Event-Driven Architecture**: Comunicación asíncrona entre servicios con RabbitMQ
 
 ## Arquitectura General
 
@@ -19,9 +19,9 @@ Este es un sistema de microservicios distribuidos construido con arquitectura or
 
 ### Patrones de Comunicación
 
-- **Eventos Asíncronos**: Para comunicación entre servicios (RabbitMQ/Azure Service Bus)
-- **REST APIs**: Para comunicación síncrona cuando sea necesario
-- **Compensación**: Para mantener consistencia eventual
+- **Eventos Asíncronos**: Para comunicación entre servicios (RabbitMQ con aio-pika)
+- **REST APIs**: Para comunicación síncrona (FastAPI endpoints)
+- **Compensación**: Para mantener consistencia eventual (Saga Pattern)
 
 ## Principios de Diseño
 
@@ -50,47 +50,112 @@ Este es un sistema de microservicios distribuidos construido con arquitectura or
 
 ### Nombrado
 
+#### Backend (Python)
 - **Eventos**: PasadoTense + Sufijo "Event" (ej: `OrderCreatedEvent`)
 - **Comandos**: Imperativo + Sufijo "Command" (ej: `CreateOrderCommand`)
 - **Handlers**: Nombre del mensaje + "Handler" (ej: `OrderCreatedEventHandler`)
 - **Servicios**: Sustantivo + "Service" (ej: `OrderService`)
+- **Variables/Funciones**: snake_case (ej: `get_order_by_id`)
+- **Clases**: PascalCase (ej: `OrderRepository`)
+- **Constantes**: UPPER_SNAKE_CASE (ej: `MAX_RETRY_ATTEMPTS`)
+
+#### Frontend (React/TypeScript)
+- **Componentes**: PascalCase (ej: `OrdersList`, `PaymentForm`)
+- **Hooks**: camelCase con prefijo "use" (ej: `useOrders`, `useAuth`)
+- **Funciones**: camelCase (ej: `fetchOrders`, `handleSubmit`)
+- **Interfaces/Types**: PascalCase con prefijo "I" o sufijo "Props" (ej: `IOrder`, `OrderFormProps`)
+- **Constantes**: UPPER_SNAKE_CASE (ej: `API_BASE_URL`)
 
 ### Estructura de Proyecto
 
+#### Backend (Python/FastAPI)
 ```
 services/
 ├── {service-name}/
-│   ├── src/
-│   │   ├── api/           # Controllers/Endpoints
-│   │   ├── application/   # Application logic, handlers
-│   │   ├── domain/        # Entidades, value objects
-│   │   ├── infrastructure/ # Implementaciones técnicas
-│   │   └── events/        # Definición de eventos
+│   ├── app/
+│   │   ├── api/           # FastAPI endpoints (routers)
+│   │   ├── core/          # Configuration, settings
+│   │   ├── application/   # Use cases, command/query handlers
+│   │   ├── domain/        # Domain models, business logic
+│   │   ├── infrastructure/ # DB, messaging, external services
+│   │   ├── events/        # Event schemas and handlers
+│   │   ├── schemas/       # Pydantic request/response models
+│   │   └── main.py        # FastAPI application entry point
 │   ├── tests/
+│   │   ├── unit/
+│   │   ├── integration/
+│   │   └── conftest.py
+│   ├── pyproject.toml     # Python dependencies (Poetry)
 │   └── .copilot-context.md
+```
+
+#### Frontend (React/Vite)
+```
+frontend/
+├── src/
+│   ├── components/        # Reusable React components
+│   │   ├── common/        # Shared components
+│   │   └── features/      # Feature-specific components
+│   ├── pages/             # Page components (routes)
+│   ├── hooks/             # Custom React hooks
+│   ├── services/          # API clients
+│   ├── stores/            # State management (Zustand)
+│   ├── types/             # TypeScript types
+│   ├── utils/             # Utility functions
+│   └── App.tsx
+├── tests/
+└── vite.config.ts
 ```
 
 ## Tecnologías y Stack
 
-### Backend (.NET para IIS)
+### Frontend (React + Vite)
 
-- ASP.NET Core Web API
-- Entity Framework Core
-- MassTransit / NServiceBus para mensajería
-- Serilog para logging
+- **React 18+**: UI library con hooks y concurrent features
+- **Vite 5+**: Build tool con HMR ultra-rápido
+- **TypeScript 5+**: Type safety
+- **React Router v6**: Client-side routing
+- **TanStack Query**: Server state management
+- **Zustand**: Client state management
+- **Tailwind CSS**: Utility-first styling
+- **shadcn/ui**: Component library
+- **Vitest**: Testing framework
+- **React Testing Library**: Component testing
+
+### Backend (Python + FastAPI)
+
+- **Python 3.12+**: Latest stable version
+- **FastAPI**: Modern async web framework
+- **Uvicorn**: ASGI server
+- **Pydantic v2**: Data validation with type hints
+- **SQLAlchemy 2.0**: ORM asíncrono
+- **Alembic**: Database migrations
+- **aio-pika**: RabbitMQ async client
+- **pytest**: Testing framework
+- **structlog**: Structured logging
+- **black**: Code formatting
+- **ruff**: Fast linting
+- **mypy**: Static type checking
 
 ### Infraestructura
 
-- IIS como servidor web principal
-- SQL Server / PostgreSQL para bases de datos
-- RabbitMQ / Azure Service Bus para mensajería
-- Redis para caché distribuido
+- **PostgreSQL**: Base de datos principal (database per service)
+- **RabbitMQ**: Message broker para eventos
+- **Redis**: Caché distribuido
+- **Docker**: Containerization
+- **Docker Compose**: Local development orchestration
 
-### BIT Components
+### Shared Code
 
-- Componentes reutilizables compartidos entre servicios
-- Contracts (schemas de eventos y DTOs)
-- Shared libraries (utilidades comunes)
+#### Frontend
+- npm packages para componentes React compartidos
+- Shared utilities y types
+- Common API client configurations
+
+#### Backend
+- Python packages (pip/poetry) para código compartido
+- Event contracts y schemas compartidos
+- Common middleware y utilities
 
 ## Reglas Importantes
 
@@ -104,18 +169,46 @@ services/
 
 ### ✅ SÍ hacer
 
-- SÍ usar DTOs para todas las APIs
+#### General
+- SÍ usar DTOs/Schemas para todas las APIs
 - SÍ validar eventos y comandos
 - SÍ implementar idempotencia en handlers
 - SÍ usar logging estructurado
 - SÍ documentar todos los eventos publicados/consumidos
 
+#### Backend (Python)
+- SÍ usar type hints en todas las funciones
+- SÍ usar async/await para operaciones I/O
+- SÍ usar Pydantic para validación de datos
+- SÍ implementar health checks en todos los servicios
+- SÍ seguir Clean Architecture (domain, application, infrastructure)
+- SÍ usar black + ruff para formateo consistente
+- SÍ usar pytest con fixtures para testing
+
+#### Frontend (React)
+- SÍ usar TypeScript strict mode
+- SÍ usar React hooks (useState, useEffect, useCallback, etc.)
+- SÍ implementar error boundaries
+- SÍ usar React Query para server state
+- SÍ implementar code splitting con React.lazy
+- SÍ usar Tailwind para estilos
+- SÍ seguir principios de composición sobre herencia
+
 ## Testing
 
-- Unit tests para lógica de dominio
-- Integration tests para event handlers
-- Contract tests para eventos compartidos
-- End-to-end tests para flujos críticos
+### Backend (Python)
+- **Unit tests**: Para lógica de dominio (pytest)
+- **Integration tests**: Para event handlers y database
+- **Contract tests**: Para eventos compartidos
+- **API tests**: Para endpoints FastAPI (httpx + TestClient)
+- **Coverage**: Mínimo 80% de cobertura
+
+### Frontend (React)
+- **Unit tests**: Para hooks y utilities (Vitest)
+- **Component tests**: Para componentes React (Testing Library)
+- **Integration tests**: Para flujos completos
+- **E2E tests**: Para user journeys críticos (Playwright - opcional)
+- **Coverage**: Mínimo 70% de cobertura
 
 ## Documentación Requerida
 
