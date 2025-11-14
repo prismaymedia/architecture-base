@@ -30,6 +30,9 @@ Este directorio contiene guías y mejores prácticas para desarrollar en el sist
 - [CQRS Pattern](cqrs-pattern.md) - Separación de comandos y consultas
 - [Event-Driven Patterns](event-driven-patterns.md) - Patrones de comunicación por eventos
 
+### Observabilidad (NEW) 🔍
+- **[Observability Best Practices](observability-best-practices.md)** - 🎯 Guía completa de observabilidad con OpenTelemetry, Prometheus, Grafana, Jaeger y Loki
+
 ### Infraestructura
 - [IIS Configuration](iis-configuration.md) - Configuración de IIS para microservicios
 - [Event Bus Setup](event-bus-setup.md) - Configuración de RabbitMQ/Service Bus
@@ -49,6 +52,7 @@ Este directorio contiene guías y mejores prácticas para desarrollar en el sist
 
 ### Operaciones
 - [Deployment](deployment.md) - Proceso de despliegue
+- **[Observability Best Practices](observability-best-practices.md)** - 🔍 Stack completo de observabilidad (traces, metrics, logs)
 - [Monitoring](monitoring.md) - Monitoreo y observabilidad
 - [Troubleshooting](troubleshooting.md) - Resolución de problemas comunes
 
@@ -288,6 +292,8 @@ Antes de crear PR:
 
 - [ ] Código sigue coding standards
 - [ ] Tests escritos y pasando (>80% coverage)
+- [ ] **Observabilidad implementada: traces, metrics, logs estructurados** ✅
+- [ ] **Dashboard creado en Grafana para el servicio** ✅
 - [ ] Documentación actualizada
 - [ ] ADR creado si es decisión significativa
 - [ ] Eventos documentados en catálogo

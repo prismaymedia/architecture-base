@@ -27,6 +27,7 @@ Cada ADR sigue la estructura:
 | [005](005-react-vite-frontend.md) | React con Vite para el Frontend | Aceptado | 2025-11-14 |
 | [006](006-python-backend.md) | Python para Backend de Microservicios | Aceptado | 2025-11-14 |
 | [007](007-trunk-based-development.md) | Trunk-Based Development Strategy | Aceptado | 2025-11-14 |
+| [010](010-observability-first-architecture.md) | Observability-First Architecture | Aceptado | 2025-11-14 |
 
 ## Decisiones Fundamentales
 
@@ -45,6 +46,9 @@ Las decisiones 001-002, 005-007 forman el núcleo de nuestra arquitectura:
 5. **GCP as Cloud Platform** (ADR-007): Google Cloud Platform para infraestructura serverless
 6. **Spotify Web API** (ADR-008): Integración oficial con Spotify para control de reproducción
 7. **Cloud Firestore Real-time Sync** (ADR-009): Sincronización en tiempo real de estado de playback
+
+### Observability (NEW)
+8. **Observability-First Architecture** (ADR-010): Stack open-source para observabilidad total (OpenTelemetry, Prometheus, Grafana, Jaeger)
 
 ### Decisiones Superseded
 
@@ -92,7 +96,7 @@ Próximas decisiones arquitectónicas a documentar:
 - [ ] Estrategia de API Versioning
 - [ ] Autenticación y Autorización (OAuth 2.0 con Spotify + JWT)
 - [ ] Estrategia de Testing (Unit, Integration, E2E)
-- [ ] Observabilidad y Monitoring (Cloud Monitoring + Logging)
+- [x] **Observabilidad y Monitoring** (ADR-010): OpenTelemetry + Prometheus + Grafana + Jaeger + Loki
 - [ ] CI/CD Pipeline Architecture (Cloud Build + Cloud Run)
 - [ ] Disaster Recovery y Backup Strategy
 - [ ] Performance Testing Strategy

@@ -258,6 +258,95 @@ Cada microservicio tiene su propia base de datos:
 - Correlación entre servicios
 - Visualización en Application Insights
 
+---
+
+## 🔍 Observabilidad: Principio Rector Fundamental
+
+> **Regla de Oro**: Todo componente debe ser observable. La observabilidad no es opcional.
+
+### Stack de Observabilidad (Open-Source)
+
+Este framework implementa **observabilidad como criterio obligatorio** utilizando tecnologías modernas, gratuitas y open-source:
+
+#### OpenTelemetry
+- Estándar unificado para instrumentación
+- SDK para Python (backend) y JavaScript (frontend)
+- Collector para agregación y exportación
+
+#### Prometheus
+- Sistema de monitoreo y métricas
+- RED metrics (Rate, Errors, Duration)
+- Alerting con Alertmanager
+
+#### Grafana
+- Visualización y dashboards
+- Alertas en tiempo real
+- Soporte multi-datasource
+
+#### Jaeger
+- Distributed tracing end-to-end
+- Análisis de latencia
+- Visualización de dependencias
+
+#### Loki + Promtail
+- Log aggregation similar a Prometheus
+- Query language (LogQL)
+- Storage eficiente
+
+### Tres Pilares Obligatorios
+
+#### 1. Logs Estructurados
+```python
+logger.info(
+    "order_created",
+    order_id=order_id,
+    user_id=user_id,
+    correlation_id=correlation_id,
+    trace_id=trace_id,
+    span_id=span_id,
+    duration_ms=234
+)
+```
+
+#### 2. Métricas (Prometheus)
+```python
+# RED Metrics
+http_requests_total.labels(method='POST', endpoint='/api/orders', status='success').inc()
+http_request_duration_seconds.labels(method='POST', endpoint='/api/orders').observe(0.234)
+
+# Event Processing
+events_consumed_total.labels(event_type='OrderCreatedEvent', status='success').inc()
+event_processing_duration_seconds.labels(event_type='OrderCreatedEvent').observe(0.145)
+```
+
+#### 3. Distributed Traces (OpenTelemetry)
+```python
+@tracer.start_as_current_span("process_order")
+async def process_order(order_id: str):
+    span = trace.get_current_span()
+    span.set_attribute("order.id", order_id)
+    
+    # Business logic con observabilidad automática
+    result = await order_service.process(order_id)
+    return result
+```
+
+### Criterio de "Done"
+
+Una funcionalidad solo se considera **COMPLETA** cuando:
+
+- [x] **Traces**: OpenTelemetry instrumentado con spans en operaciones críticas
+- [x] **Metrics**: RED metrics + event metrics + business metrics expuestas en `/metrics`
+- [x] **Logs**: Logs estructurados con correlation IDs y trace context
+- [x] **Dashboard**: Creado en Grafana con visualizaciones clave
+- [x] **Alertas**: Configuradas para errores críticos
+- [x] **Tests**: Tests de observabilidad (emisión de metrics, traces, logs)
+- [x] **Docs**: Métricas y traces documentadas
+
+Ver [ADR-010: Observability-First Architecture](../adr/010-observability-first-architecture.md) y [Observability Best Practices Guide](../guides/observability-best-practices.md) para detalles completos.
+
+---
+
 ## Escalabilidad
 
 - **Horizontal scaling**: Múltiples instancias por servicio en IIS
