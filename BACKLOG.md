@@ -1,8 +1,12 @@
-# Product Backlog
+# Product Backlog - Remote Spotify Player para DJ
 
 > **Última actualización**: 2025-11-14
 > 
 > **Metodología**: Kanban
+> 
+> **Proyecto**: Sistema de control remoto de Spotify para aplicaciones DJ
+> 
+> **Cloud Platform**: Google Cloud Platform (GCP)
 > 
 > **Estado del Backlog**: En construcción inicial
 
@@ -10,7 +14,7 @@
 
 ## Instrucciones de Uso
 
-Este backlog contiene todas las historias de usuario pendientes, en progreso y completadas del proyecto. Utilizamos metodología Kanban para gestión continua del flujo de trabajo.
+Este backlog contiene todas las historias de usuario pendientes, en progreso y completadas del proyecto de Remote Spotify Player para aplicaciones DJ. Utilizamos metodología Kanban para gestión continua del flujo de trabajo.
 
 ### Para agregar una nueva historia:
 1. Usa la plantilla en `docs/backlog-template.md`
@@ -33,224 +37,238 @@ Este backlog contiene todas las historias de usuario pendientes, en progreso y c
 
 ### 🔴 Prioridad Alta - Crítico
 
-#### US-001: Creación de Pedido Básico
-**Como** cliente del e-commerce  
-**Quiero** poder crear un pedido con productos seleccionados  
-**Para** completar mi compra
+#### US-001: Autenticación con Spotify
+**Como** DJ o usuario de la aplicación  
+**Quiero** autenticarme con mi cuenta de Spotify Premium  
+**Para** poder controlar mi reproducción remotamente
 
 **Criterios de Aceptación:**
-- [ ] Puedo agregar productos al carrito
-- [ ] Puedo ver el resumen de mi pedido antes de confirmar
-- [ ] El sistema valida disponibilidad de stock
-- [ ] Se genera un número de orden único
-- [ ] Recibo confirmación por email
+- [ ] Puedo iniciar sesión usando OAuth 2.0 de Spotify
+- [ ] El sistema valida que tengo cuenta Premium (requerido para Web API)
+- [ ] Mis tokens se almacenan de forma segura en GCP Secret Manager
+- [ ] El sistema renueva automáticamente tokens expirados
+- [ ] Puedo ver qué dispositivos Spotify están disponibles
+- [ ] Recibo confirmación cuando la autenticación es exitosa
 
 **Estimación**: 8 Story Points  
-**Epic**: Gestión de Pedidos  
-**Servicios Afectados**: Orders API, Inventory API, Notifications API  
+**Epic**: Integración con Spotify  
+**Servicios Afectados**: Spotify Integration API  
 **Estado**: To Do  
-**Notas Técnicas**: Implementar OrderCreatedEvent y flujo básico de Saga
+**Notas Técnicas**: Implementar OAuth 2.0 flow, UserAuthenticatedEvent, token refresh mechanism
 
 ---
 
-#### US-002: Procesamiento de Pagos
-**Como** cliente  
-**Quiero** pagar mi pedido con tarjeta de crédito  
-**Para** completar la transacción
+#### US-002: Control Básico de Reproducción
+**Como** DJ  
+**Quiero** controlar la reproducción de Spotify (play, pause, next, previous)  
+**Para** gestionar la música durante mi sesión
 
 **Criterios de Aceptación:**
-- [ ] Puedo ingresar datos de tarjeta de forma segura
-- [ ] El sistema tokeniza la información de pago
-- [ ] Recibo confirmación de pago aprobado o rechazado
-- [ ] Si el pago es rechazado, el pedido se cancela automáticamente
-- [ ] Los datos de pago están encriptados
+- [ ] Puedo iniciar reproducción de una track específica
+- [ ] Puedo pausar y reanudar la reproducción
+- [ ] Puedo saltar a la siguiente o anterior track
+- [ ] Puedo ajustar el volumen (0-100%)
+- [ ] Puedo hacer seek a una posición específica en la track
+- [ ] Veo confirmación visual de cada acción ejecutada
+- [ ] Los comandos responden en <200ms
+- [ ] Si hay error, recibo mensaje descriptivo
 
 **Estimación**: 13 Story Points  
-**Epic**: Procesamiento de Pagos  
-**Servicios Afectados**: Payments API, Orders API  
+**Epic**: Control de Playback  
+**Servicios Afectados**: Playback Control API, Spotify Integration API  
 **Dependencias**: US-001  
 **Estado**: To Do  
-**Notas Técnicas**: Integración con Stripe, implementar PaymentApprovedEvent
+**Notas Técnicas**: Implementar PlaybackCommandEvent, integración con Spotify Web API playback endpoints
 
 ---
 
-#### US-003: Reserva de Inventario
-**Como** sistema  
-**Quiero** reservar automáticamente el inventario cuando se crea un pedido  
-**Para** garantizar disponibilidad de productos
+#### US-003: Sincronización de Estado en Tiempo Real
+**Como** DJ con múltiples dispositivos  
+**Quiero** ver el estado de reproducción sincronizado en tiempo real  
+**Para** tener información consistente en todos mis dispositivos
 
 **Criterios de Aceptación:**
-- [ ] Al crear pedido, el stock se reserva temporalmente
-- [ ] La reserva expira después de 15 minutos si no se confirma pago
-- [ ] Si no hay stock, el pedido se cancela inmediatamente
-- [ ] El stock liberado vuelve a estar disponible
-- [ ] Se registra historial de movimientos de inventario
+- [ ] El estado de reproducción se actualiza en <100ms en todos los dispositivos
+- [ ] Veo: track actual, artista, álbum, posición, duración, estado (playing/paused)
+- [ ] Veo artwork de la track actual
+- [ ] Si cambio el volumen en un dispositivo, se refleja en todos
+- [ ] La sincronización funciona incluso con conexión inestable (offline support)
+- [ ] Uso Cloud Firestore para updates en tiempo real
 
 **Estimación**: 8 Story Points  
-**Epic**: Gestión de Inventario  
-**Servicios Afectados**: Inventory API  
-**Dependencias**: US-001  
+**Epic**: Sincronización en Tiempo Real  
+**Servicios Afectados**: Sync Service, Playback Control API  
+**Dependencias**: US-001, US-002  
 **Estado**: To Do  
-**Notas Técnicas**: Implementar InventoryReservedEvent, job para liberar reservas expiradas
+**Notas Técnicas**: Implementar SyncStateUpdatedEvent, Cloud Firestore real-time listeners
 
 ---
 
 ### 🟡 Prioridad Media - Importante
 
-#### US-004: Notificaciones de Estado de Pedido
-**Como** cliente  
-**Quiero** recibir notificaciones sobre el estado de mi pedido  
-**Para** estar informado del progreso
+#### US-004: Integración con Controlador MIDI
+**Como** DJ con controlador MIDI  
+**Quiero** controlar Spotify usando los faders, knobs y botones de mi controlador  
+**Para** tener control táctil durante mi sesión
 
 **Criterios de Aceptación:**
-- [ ] Recibo email cuando se crea el pedido
-- [ ] Recibo email cuando se confirma el pago
-- [ ] Recibo email cuando el pedido se envía (con tracking)
-- [ ] Recibo email si el pedido se cancela
-- [ ] Puedo configurar mis preferencias de notificación
+- [ ] El sistema detecta automáticamente controladores MIDI conectados
+- [ ] Puedo mapear botones MIDI a acciones (play, pause, next, etc.)
+- [ ] Puedo mapear faders/knobs a controles (volumen, seek, tempo)
+- [ ] Los cambios en el controlador se reflejan inmediatamente en Spotify
+- [ ] El sistema soporta múltiples controladores simultáneos
+- [ ] Puedo guardar y cargar configuraciones de mapeo
 
-**Estimación**: 5 Story Points  
-**Epic**: Comunicación con Cliente  
-**Servicios Afectados**: Notifications API  
-**Dependencias**: US-001, US-002  
-**Estado**: To Do
+**Estimación**: 13 Story Points  
+**Epic**: Integración DJ Hardware  
+**Servicios Afectados**: DJ Console Integration API  
+**Dependencias**: US-002  
+**Estado**: To Do  
+**Notas Técnicas**: Web MIDI API (frontend), python-rtmidi (backend), DeviceConnectedEvent
 
 ---
 
-#### US-005: Historial de Pedidos
-**Como** cliente  
-**Quiero** ver el historial de todos mis pedidos  
-**Para** hacer seguimiento de mis compras
+#### US-005: Gestión de Playlists y Colas
+**Como** DJ  
+**Quiero** gestionar playlists y colas de reproducción  
+**Para** preparar y organizar mi set musical
 
 **Criterios de Aceptación:**
-- [ ] Puedo ver lista de todos mis pedidos
-- [ ] Puedo filtrar por estado (pendiente, completado, cancelado)
-- [ ] Puedo ver detalles de cada pedido
-- [ ] Puedo ver historial de cambios de estado
-- [ ] La lista está paginada
+- [ ] Puedo ver mis playlists de Spotify
+- [ ] Puedo buscar tracks en mi biblioteca y Spotify
+- [ ] Puedo agregar tracks a la cola de reproducción
+- [ ] Puedo reordenar tracks en la cola
+- [ ] Puedo ver la cola actual y próximas tracks
+- [ ] Puedo crear y guardar playlists temporales para mi sesión
 
-**Estimación**: 5 Story Points  
-**Epic**: Gestión de Pedidos  
-**Servicios Afectados**: Orders API  
+**Estimación**: 8 Story Points  
+**Epic**: Gestión de Contenido  
+**Servicios Afectados**: Spotify Integration API, Playback Control API  
 **Dependencias**: US-001  
 **Estado**: To Do
 
 ---
 
-#### US-006: Cancelación de Pedido
-**Como** cliente  
-**Quiero** poder cancelar mi pedido antes de que se envíe  
-**Para** no recibir productos que ya no necesito
+#### US-006: Dashboard de Estado de Playback
+**Como** DJ  
+**Quiero** ver un dashboard completo del estado de reproducción  
+**Para** tener control visual de toda la sesión
 
 **Criterios de Aceptación:**
-- [ ] Puedo cancelar pedidos en estado "Pendiente" o "Confirmado"
-- [ ] No puedo cancelar pedidos ya enviados
-- [ ] Si ya se procesó el pago, se genera reembolso automático
-- [ ] El inventario reservado se libera
-- [ ] Recibo confirmación de cancelación
+- [ ] Veo waveform de la track actual (visualización de audio)
+- [ ] Veo BPM detectado de la track
+- [ ] Veo key/tonalidad de la track (si disponible en Spotify)
+- [ ] Veo historial de tracks reproducidas
+- [ ] Veo nivel de volumen con VU meter visual
+- [ ] Puedo ver tiempo transcurrido y tiempo restante
 
 **Estimación**: 8 Story Points  
-**Epic**: Gestión de Pedidos  
-**Servicios Afectados**: Orders API, Payments API, Inventory API  
-**Dependencias**: US-001, US-002  
-**Estado**: To Do  
-**Notas Técnicas**: Implementar compensación en Saga
+**Epic**: UI/UX DJ  
+**Servicios Afectados**: Frontend, Playback Control API  
+**Dependencias**: US-002, US-003  
+**Estado**: To Do
 
 ---
 
 ### 🟢 Prioridad Baja - Mejoras
 
-#### US-007: Dashboard de Inventario
-**Como** administrador de inventario  
-**Quiero** ver un dashboard con el estado actual del inventario  
-**Para** gestionar el stock de manera eficiente
+#### US-007: Analytics de Uso y Sesiones
+**Como** DJ o administrador  
+**Quiero** ver estadísticas de mis sesiones  
+**Para** analizar mi uso y mejorar mi workflow
 
 **Criterios de Aceptación:**
-- [ ] Veo productos con stock bajo
-- [ ] Veo productos sin stock
-- [ ] Veo historial de movimientos de inventario
-- [ ] Puedo ajustar manualmente el inventario
-- [ ] Los ajustes se auditan
+- [ ] Veo total de sesiones y duración
+- [ ] Veo tracks más reproducidas
+- [ ] Veo artistas más reproducidos
+- [ ] Veo estadísticas por género musical
+- [ ] Puedo exportar reportes en PDF/CSV
+- [ ] Veo gráficos de uso a lo largo del tiempo
 
 **Estimación**: 8 Story Points  
-**Epic**: Herramientas de Administración  
-**Servicios Afectados**: Inventory API  
+**Epic**: Analytics y Reporting  
+**Servicios Afectados**: Nuevo servicio (Analytics API), Cloud Storage  
 **Estado**: To Do
 
 ---
 
-#### US-008: Métricas de Negocio
-**Como** gerente de operaciones  
-**Quiero** ver métricas clave del negocio  
-**Para** tomar decisiones basadas en datos
+#### US-008: Soporte Multi-dispositivo y Multi-usuario
+**Como** DJ  
+**Quiero** controlar diferentes dispositivos Spotify simultáneamente  
+**Para** tener setup con múltiples zonas de audio
 
 **Criterios de Aceptación:**
-- [ ] Veo total de ventas del día/mes
-- [ ] Veo tasa de conversión de pedidos
-- [ ] Veo productos más vendidos
-- [ ] Veo tasa de cancelaciones
-- [ ] Veo tiempo promedio de procesamiento
+- [ ] Puedo seleccionar dispositivo de salida activo
+- [ ] Puedo ver todos los dispositivos Spotify disponibles
+- [ ] Puedo transferir reproducción entre dispositivos
+- [ ] Puedo controlar volumen independiente por dispositivo
+- [ ] Soporto Spotify Connect devices
+- [ ] Puedo agrupar dispositivos (si lo soporta Spotify)
+
+**Estimación**: 5 Story Points  
+**Epic**: Multi-dispositivo  
+**Servicios Afectados**: Playback Control API, Sync Service  
+**Dependencias**: US-001, US-002  
+**Estado**: To Do
+
+---
+
+#### US-009: Presets y Configuraciones DJ
+**Como** DJ  
+**Quiero** guardar y cargar configuraciones predefinidas  
+**Para** cambiar rápidamente entre diferentes setups
+
+**Criterios de Aceptación:**
+- [ ] Puedo guardar configuraciones de mapeo MIDI
+- [ ] Puedo guardar playlists favoritas para cada tipo de evento
+- [ ] Puedo guardar preferencias de EQ y efectos (si disponibles)
+- [ ] Puedo cambiar entre presets con un solo click
+- [ ] Puedo exportar/importar presets
+- [ ] Los presets se sincronizan en la nube (Cloud Storage)
+
+**Estimación**: 5 Story Points  
+**Epic**: Personalización  
+**Servicios Afectados**: DJ Console Integration API, Cloud Storage  
+**Dependencias**: US-004  
+**Estado**: To Do
+
+---
+
+#### US-010: Integración con Rekordbox y Software DJ
+**Como** DJ profesional  
+**Quiero** integrar el player con Rekordbox, Serato, Traktor  
+**Para** usar Spotify dentro de mi software DJ habitual
+
+**Criterios de Aceptación:**
+- [ ] Puedo usar Spotify tracks en Rekordbox (via integration plugin)
+- [ ] La integración soporta metadata: BPM, key, cue points
+- [ ] Puedo arrastrar tracks de Spotify a decks DJ
+- [ ] El estado de playback se sincroniza bidireccionalmente
+- [ ] Soporto protocol de comunicación de Rekordbox/Serato
+- [ ] Documentación de API para third-party integrations
 
 **Estimación**: 13 Story Points  
-**Epic**: Analytics  
-**Servicios Afectados**: Nuevo servicio (Analytics API)  
-**Estado**: To Do
-
----
-
-#### US-009: Tracking de Envío
-**Como** cliente  
-**Quiero** hacer seguimiento de mi envío en tiempo real  
-**Para** saber cuándo llegará mi pedido
-
-**Criterios de Aceptación:**
-- [ ] Recibo número de tracking cuando se envía el pedido
-- [ ] Puedo ver estado actual del envío
-- [ ] Veo estimación de entrega
-- [ ] Recibo notificación cuando se entrega
-- [ ] Integración con API de transportista
-
-**Estimación**: 8 Story Points  
-**Epic**: Logística  
-**Servicios Afectados**: Orders API, Notifications API  
-**Dependencias**: US-001  
-**Estado**: To Do
-
----
-
-#### US-010: Métodos de Pago Adicionales
-**Como** cliente  
-**Quiero** poder pagar con PayPal además de tarjeta  
-**Para** usar mi método de pago preferido
-
-**Criterios de Aceptación:**
-- [ ] Puedo seleccionar PayPal como método de pago
-- [ ] El flujo de pago con PayPal funciona correctamente
-- [ ] Recibo confirmación del pago
-- [ ] Los reembolsos funcionan para PayPal
-- [ ] Los datos se almacenan de forma segura
-
-**Estimación**: 8 Story Points  
-**Epic**: Procesamiento de Pagos  
-**Servicios Afectados**: Payments API  
-**Dependencias**: US-002  
-**Estado**: To Do
+**Epic**: Integración DJ Software  
+**Servicios Afectados**: DJ Console Integration API, nuevo SDK  
+**Dependencias**: US-001, US-002  
+**Estado**: To Do  
+**Notas Técnicas**: Investigar APIs de Rekordbox/Serato, crear bridge/plugin
 
 ---
 
 ## Estado del Kanban Board
 
 ### 📋 To Do (Backlog)
-- US-001: Creación de Pedido Básico
-- US-002: Procesamiento de Pagos
-- US-003: Reserva de Inventario
-- US-004: Notificaciones de Estado de Pedido
-- US-005: Historial de Pedidos
-- US-006: Cancelación de Pedido
-- US-007: Dashboard de Inventario
-- US-008: Métricas de Negocio
-- US-009: Tracking de Envío
-- US-010: Métodos de Pago Adicionales
+- US-001: Autenticación con Spotify
+- US-002: Control Básico de Reproducción
+- US-003: Sincronización de Estado en Tiempo Real
+- US-004: Integración con Controlador MIDI
+- US-005: Gestión de Playlists y Colas
+- US-006: Dashboard de Estado de Playback
+- US-007: Analytics de Uso y Sesiones
+- US-008: Soporte Multi-dispositivo y Multi-usuario
+- US-009: Presets y Configuraciones DJ
+- US-010: Integración con Rekordbox y Software DJ
 
 **Total**: 10 historias
 
@@ -276,37 +294,52 @@ _Ninguna historia completada aún_
 
 ## Épics
 
-### Epic: Gestión de Pedidos
-**Objetivo**: Permitir a los clientes crear, ver y gestionar sus pedidos  
-**Historias**: US-001, US-005, US-006  
-**Progreso**: 0/3 (0%)
+### Epic: Integración con Spotify
+**Objetivo**: Conectar y autenticar con Spotify Web API de forma segura  
+**Historias**: US-001  
+**Progreso**: 0/1 (0%)
 
-### Epic: Procesamiento de Pagos
-**Objetivo**: Procesar pagos de manera segura y eficiente  
-**Historias**: US-002, US-010  
+### Epic: Control de Playback
+**Objetivo**: Permitir control completo de reproducción de Spotify  
+**Historias**: US-002, US-006  
 **Progreso**: 0/2 (0%)
 
-### Epic: Gestión de Inventario
-**Objetivo**: Mantener control preciso del inventario  
-**Historias**: US-003, US-007  
+### Epic: Sincronización en Tiempo Real
+**Objetivo**: Mantener estado consistente en todos los dispositivos  
+**Historias**: US-003, US-008  
 **Progreso**: 0/2 (0%)
 
-### Epic: Comunicación con Cliente
-**Objetivo**: Mantener al cliente informado  
+### Epic: Integración DJ Hardware
+**Objetivo**: Integrar con controladores MIDI y hardware DJ  
 **Historias**: US-004, US-009  
 **Progreso**: 0/2 (0%)
 
-### Epic: Herramientas de Administración
-**Objetivo**: Proveer herramientas para administradores  
-**Historias**: US-007, US-008  
-**Progreso**: 0/2 (0%)
+### Epic: Gestión de Contenido
+**Objetivo**: Gestionar playlists, búsqueda y colas  
+**Historias**: US-005  
+**Progreso**: 0/1 (0%)
+
+### Epic: UI/UX DJ
+**Objetivo**: Proveer interfaz intuitiva y visual para DJs  
+**Historias**: US-006  
+**Progreso**: 0/1 (0%)
+
+### Epic: Analytics y Reporting
+**Objetivo**: Recopilar y visualizar estadísticas de uso  
+**Historias**: US-007  
+**Progreso**: 0/1 (0%)
+
+### Epic: Integración DJ Software
+**Objetivo**: Integrar con Rekordbox, Serato, Traktor  
+**Historias**: US-010  
+**Progreso**: 0/1 (0%)
 
 ---
 
 ## Métricas del Backlog
 
 - **Total de Historias**: 10
-- **Story Points Totales**: 82
+- **Story Points Totales**: 81
 - **Historias Completadas**: 0
 - **Velocity Promedio**: TBD (se calculará después de primeros sprints)
 - **Tiempo Estimado de Completación**: TBD
