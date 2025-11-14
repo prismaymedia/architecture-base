@@ -1,6 +1,6 @@
 # Architecture Decision Records (ADRs)
 
-Este directorio contiene todas las decisiones arquitectónicas importantes del proyecto. Cada ADR documenta una decisión significativa, su contexto, alternativas consideradas y consecuencias.
+Este directorio contiene todas las decisiones arquitectónicas importantes del proyecto Remote Spotify Player para aplicaciones DJ. Cada ADR documenta una decisión significativa, su contexto, alternativas consideradas y consecuencias.
 
 ## Formato de ADR
 
@@ -26,19 +26,30 @@ Cada ADR sigue la estructura:
 | [004](004-bit-components-platform.md) | BIT como Plataforma de Componentes | Superseded | 2025-11-14 |
 | [005](005-react-vite-frontend.md) | React con Vite para el Frontend | Aceptado | 2025-11-14 |
 | [006](006-python-backend.md) | Python para Backend de Microservicios | Aceptado | 2025-11-14 |
+| [007](007-gcp-cloud-platform.md) | **Google Cloud Platform (GCP) como Plataforma Cloud** | **Aceptado** | **2025-11-14** |
+| [008](008-spotify-api-integration.md) | **Integración con Spotify Web API** | **Aceptado** | **2025-11-14** |
+| [009](009-realtime-sync.md) | **Sincronización en Tiempo Real con Cloud Firestore** | **Aceptado** | **2025-11-14** |
 
 ## Decisiones Fundamentales
 
-Las decisiones 001-002, 005-006 forman el núcleo de nuestra arquitectura:
+Las siguientes decisiones forman el núcleo de nuestra arquitectura:
 
+### Core Architecture
 1. **Event-Driven** (ADR-001): Comunicación asíncrona entre servicios
-2. **Database per Service** (ADR-002): Independencia de datos
-3. **React + Vite Frontend** (ADR-005): Framework moderno para el frontend
+2. **Database per Service** (ADR-002): Independencia de datos por microservicio
+
+### Technology Stack
+3. **React + Vite Frontend** (ADR-005): Framework moderno para UI de control DJ
 4. **Python Backend** (ADR-006): Microservicios con FastAPI
+
+### Cloud & Integration (NEW)
+5. **GCP as Cloud Platform** (ADR-007): Google Cloud Platform para infraestructura serverless
+6. **Spotify Web API** (ADR-008): Integración oficial con Spotify para control de reproducción
+7. **Cloud Firestore Real-time Sync** (ADR-009): Sincronización en tiempo real de estado de playback
 
 ### Decisiones Superseded
 
-- **IIS Web Server** (ADR-003): Reemplazado por Python/Uvicorn + Vite dev server
+- **IIS Web Server** (ADR-003): Reemplazado por Cloud Run (GCP) + Uvicorn/Vite
 - **BIT Components** (ADR-004): Reemplazado por npm packages (frontend) y Python packages (backend)
 
 ## Proceso de ADR
@@ -71,16 +82,23 @@ Los ADRs son inmutables una vez aceptados. Para cambiar una decisión:
 
 Próximas decisiones arquitectónicas a documentar:
 
+### DJ & Spotify Specific
+- [ ] MIDI Protocol Integration Strategy (controladores DJ)
+- [ ] Audio Analysis and BPM Detection (fallback cuando Spotify no provee)
+- [ ] Offline Mode and Caching Strategy
+- [ ] Crossfade and Mixing Implementation
+- [ ] Integration with DJ Software (Rekordbox, Serato)
+
+### General Architecture
 - [ ] Estrategia de API Versioning
-- [ ] Autenticación y Autorización (OAuth 2.0 / JWT)
+- [ ] Autenticación y Autorización (OAuth 2.0 con Spotify + JWT)
 - [ ] Estrategia de Testing (Unit, Integration, E2E)
-- [ ] Observabilidad y Monitoring (Application Insights)
-- [ ] Estrategia de Cache (Redis)
-- [ ] CI/CD Pipeline Architecture
+- [ ] Observabilidad y Monitoring (Cloud Monitoring + Logging)
+- [ ] CI/CD Pipeline Architecture (Cloud Build + Cloud Run)
 - [ ] Disaster Recovery y Backup Strategy
 - [ ] Performance Testing Strategy
-- [ ] Data Migration Strategy
-- [ ] API Gateway Pattern
+- [ ] Rate Limiting and Throttling Strategy
+- [ ] WebSocket vs Server-Sent Events for Real-time Commands
 
 ## Referencias
 
@@ -93,3 +111,5 @@ Próximas decisiones arquitectónicas a documentar:
 - [ADR GitHub Organization](https://adr.github.io/)
 - [Documenting Architecture Decisions](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
 - [ThoughtWorks ADR Tools](https://github.com/npryce/adr-tools)
+- [Spotify Web API Documentation](https://developer.spotify.com/documentation/web-api)
+- [GCP Architecture Center](https://cloud.google.com/architecture)
