@@ -2,26 +2,29 @@
 
 ## Contexto del Proyecto
 
-Este es un sistema de microservicios distribuidos construido con arquitectura orientada a eventos. El proyecto utiliza:
+Este es un **sistema de Remote Spotify Player para aplicaciones DJ** construido con arquitectura orientada a eventos. El proyecto permite controlar Spotify remotamente desde consolas DJ y aplicaciones como Rekordbox, con sincronización en tiempo real entre múltiples dispositivos. El proyecto utiliza:
 
-- **Frontend**: React 18+ con Vite como build tool y TypeScript
+- **Frontend**: React 18+ con Vite como build tool y TypeScript para UI de control DJ
 - **Backend**: Python 3.12+ con FastAPI para microservicios
-- **Event-Driven Architecture**: Comunicación asíncrona entre servicios con RabbitMQ
+- **Cloud Platform**: Google Cloud Platform (GCP) con servicios serverless
+- **Event-Driven Architecture**: Comunicación asíncrona entre servicios con Cloud Pub/Sub
+- **Real-time Sync**: Cloud Firestore para sincronización de estado de playback (<100ms latency)
 
 ## Arquitectura General
 
 ### Microservicios
 
-1. **Orders API** - Gestión de pedidos
-2. **Inventory API** - Control de inventario
-3. **Payments API** - Procesamiento de pagos
-4. **Notifications API** - Envío de notificaciones
+1. **Spotify Integration API** - Autenticación OAuth y comunicación con Spotify Web API
+2. **Playback Control API** - Control de reproducción (play, pause, volume, seek)
+3. **Sync Service** - Sincronización en tiempo real del estado de playback vía Firestore
+4. **DJ Console Integration API** - Integración con controladores MIDI/HID y hardware DJ
 
 ### Patrones de Comunicación
 
-- **Eventos Asíncronos**: Para comunicación entre servicios (RabbitMQ con aio-pika)
+- **Eventos Asíncronos**: Para comunicación entre servicios (Cloud Pub/Sub)
 - **REST APIs**: Para comunicación síncrona (FastAPI endpoints)
-- **Compensación**: Para mantener consistencia eventual (Saga Pattern)
+- **Real-time Sync**: Cloud Firestore para estado de playback en tiempo real
+- **OAuth 2.0**: Para autenticación con Spotify
 
 ## Principios de Diseño
 
@@ -51,20 +54,20 @@ Este es un sistema de microservicios distribuidos construido con arquitectura or
 ### Nombrado
 
 #### Backend (Python)
-- **Eventos**: PasadoTense + Sufijo "Event" (ej: `OrderCreatedEvent`)
-- **Comandos**: Imperativo + Sufijo "Command" (ej: `CreateOrderCommand`)
-- **Handlers**: Nombre del mensaje + "Handler" (ej: `OrderCreatedEventHandler`)
-- **Servicios**: Sustantivo + "Service" (ej: `OrderService`)
-- **Variables/Funciones**: snake_case (ej: `get_order_by_id`)
-- **Clases**: PascalCase (ej: `OrderRepository`)
-- **Constantes**: UPPER_SNAKE_CASE (ej: `MAX_RETRY_ATTEMPTS`)
+- **Eventos**: PasadoTense + Sufijo "Event" (ej: `UserAuthenticatedEvent`, `PlaybackStateChangedEvent`)
+- **Comandos**: Imperativo + Sufijo "Command" (ej: `StartPlaybackCommand`, `RefreshTokenCommand`)
+- **Handlers**: Nombre del mensaje + "Handler" (ej: `UserAuthenticatedEventHandler`, `MIDICommandHandler`)
+- **Servicios**: Sustantivo + "Service" (ej: `SpotifyService`, `PlaybackService`, `SyncService`)
+- **Variables/Funciones**: snake_case (ej: `get_playback_state`, `refresh_spotify_token`)
+- **Clases**: PascalCase (ej: `SpotifyUser`, `PlaybackRepository`, `MIDIDevice`)
+- **Constantes**: UPPER_SNAKE_CASE (ej: `MAX_RETRY_ATTEMPTS`, `SPOTIFY_API_TIMEOUT`)
 
 #### Frontend (React/TypeScript)
-- **Componentes**: PascalCase (ej: `OrdersList`, `PaymentForm`)
-- **Hooks**: camelCase con prefijo "use" (ej: `useOrders`, `useAuth`)
-- **Funciones**: camelCase (ej: `fetchOrders`, `handleSubmit`)
-- **Interfaces/Types**: PascalCase con prefijo "I" o sufijo "Props" (ej: `IOrder`, `OrderFormProps`)
-- **Constantes**: UPPER_SNAKE_CASE (ej: `API_BASE_URL`)
+- **Componentes**: PascalCase (ej: `PlaybackControls`, `TrackDisplay`, `VolumeSlider`)
+- **Hooks**: camelCase con prefijo "use" (ej: `useSpotifyPlayer`, `usePlaybackState`, `useMIDIDevice`)
+- **Funciones**: camelCase (ej: `startPlayback`, `handleVolumeChange`, `syncPlaybackState`)
+- **Interfaces/Types**: PascalCase con prefijo "I" o sufijo "Props" (ej: `ITrack`, `PlaybackControlsProps`)
+- **Constantes**: UPPER_SNAKE_CASE (ej: `SPOTIFY_API_BASE_URL`, `MAX_VOLUME`)
 
 ### Estructura de Proyecto
 
