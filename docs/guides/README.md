@@ -4,6 +4,14 @@ Este directorio contiene guías y mejores prácticas para desarrollar en el sist
 
 ## Contenido
 
+### Gestión de Producto
+- [Product Owner Guide](product-owner-guide.md) - Manual para Product Owner con Kanban
+- [Kanban Guide](kanban-guide.md) - Guía de Kanban para el equipo
+- [Idea to Task Flow](idea-to-task-flow.md) - Flujo completo de ideas a tareas
+- [ClickUp Integration](clickup-integration.md) - Integración con ClickUp
+- **[🤖 Quick Start: Procesador de Ideas](quick-start-idea-processor.md)** - Guía rápida de 5 minutos
+- **[🔄 Integración del Procesador](integration-idea-processor.md)** - Workflows híbridos y mejores prácticas
+
 ### Patrones Arquitectónicos
 - [Saga Pattern](saga-pattern.md) - Transacciones distribuidas
 - [CQRS Pattern](cqrs-pattern.md) - Separación de comandos y consultas
