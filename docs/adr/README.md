@@ -26,13 +26,11 @@ Cada ADR sigue la estructura:
 | [004](004-bit-components-platform.md) | BIT como Plataforma de Componentes | Superseded | 2025-11-14 |
 | [005](005-react-vite-frontend.md) | React con Vite para el Frontend | Aceptado | 2025-11-14 |
 | [006](006-python-backend.md) | Python para Backend de Microservicios | Aceptado | 2025-11-14 |
-| [007](007-gcp-cloud-platform.md) | **Google Cloud Platform (GCP) como Plataforma Cloud** | **Aceptado** | **2025-11-14** |
-| [008](008-spotify-api-integration.md) | **Integración con Spotify Web API** | **Aceptado** | **2025-11-14** |
-| [009](009-realtime-sync.md) | **Sincronización en Tiempo Real con Cloud Firestore** | **Aceptado** | **2025-11-14** |
+| [007](007-trunk-based-development.md) | Trunk-Based Development Strategy | Aceptado | 2025-11-14 |
 
 ## Decisiones Fundamentales
 
-Las siguientes decisiones forman el núcleo de nuestra arquitectura:
+Las decisiones 001-002, 005-007 forman el núcleo de nuestra arquitectura:
 
 ### Core Architecture
 1. **Event-Driven** (ADR-001): Comunicación asíncrona entre servicios
@@ -41,6 +39,7 @@ Las siguientes decisiones forman el núcleo de nuestra arquitectura:
 ### Technology Stack
 3. **React + Vite Frontend** (ADR-005): Framework moderno para UI de control DJ
 4. **Python Backend** (ADR-006): Microservicios con FastAPI
+5. **Trunk-Based Development** (ADR-007): Estrategia de control de versiones y cambios
 
 ### Cloud & Integration (NEW)
 5. **GCP as Cloud Platform** (ADR-007): Google Cloud Platform para infraestructura serverless

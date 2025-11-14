@@ -382,7 +382,9 @@ Ver [scripts/idea_processor/README.md](scripts/idea_processor/README.md) para do
 ### Para Arquitectos
 
 - **[ADRs](docs/adr/README.md)**: Decisiones arquitectónicas importantes
+- **[ADR-007: Trunk-Based Development](docs/adr/007-trunk-based-development.md)**: Estrategia de control de versiones
 - **[Saga Pattern](docs/guides/saga-pattern.md)**: Implementación de transacciones distribuidas
+- **[Version Control Workflow](docs/guides/version-control-workflow.md)**: Flujo de trabajo con Git
 
 ### Por Servicio
 
@@ -406,11 +408,13 @@ Este proyecto está diseñado para ser construido con la asistencia de GitHub Co
 
 ### Workflow
 
-1. Crea un branch para tu feature
+1. Crea un branch siguiendo [Version Control Workflow](docs/guides/version-control-workflow.md)
 2. Consulta documentación relevante
 3. Usa Copilot para generar código siguiendo los patrones
-4. Escribe tests
-5. Crea Pull Request
+4. Usa [Feature Flags](docs/guides/feature-flags.md) para trabajo incompleto
+5. Escribe tests
+6. Sigue [Code Review Guidelines](docs/guides/code-review.md)
+7. Crea Pull Request
 
 ## 🔒 Principios de Diseño
 
@@ -431,6 +435,13 @@ Este proyecto está diseñado para ser construido con la asistencia de GitHub Co
 - ✅ Retry policies
 - ✅ Timeouts apropiados
 - ✅ Health checks
+
+### Control de Versiones
+- ✅ Trunk-Based Development
+- ✅ Feature flags para trabajo incompleto
+- ✅ Integración frecuente (diaria)
+- ✅ Main branch siempre desplegable
+- 📚 Ver [Version Control Workflow](docs/guides/version-control-workflow.md)
 
 ## 📊 Flujo de Negocio Principal
 
