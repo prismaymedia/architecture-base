@@ -1,0 +1,75 @@
+name: Process Ideas with Gemini AI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - 'IDEAS.md'
+
+jobs:
+  process-ideas:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r scripts/idea_processor/requirements.txt
+      
+      - name: Process ideas with Gemini
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          AI_PROVIDER: gemini
+        run: |
+          python -m scripts.idea_processor.cli
+      
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code IDEAS.md BACKLOG.md || echo "changed=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push changes
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add IDEAS.md BACKLOG.md
+          git commit -m "🤖 Auto-process ideas: Update IDEAS.md and BACKLOG.md
+          
+          - Detected duplicate ideas and marked them
+          - Generated new user stories from unique ideas
+          - Updated by Gemini AI via GitHub Actions"
+          git push
+      
+      - name: Create summary
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          echo "## 🤖 Ideas Processed Successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The idea processor has analyzed IDEAS.md and:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Detected and marked duplicate ideas" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Generated user stories from unique ideas" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Updated BACKLOG.md with new user stories" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Changes have been committed and pushed automatically." >> $GITHUB_STEP_SUMMARY
+      
+      - name: No changes detected
+        if: steps.git-check.outputs.changed != 'true'
+        run: |
+          echo "## ℹ️ No Changes Needed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "No new ideas to process or all ideas have already been processed." >> $GITHUB_STEP_SUMMARY

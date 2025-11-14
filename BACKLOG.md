@@ -104,6 +104,36 @@ Este backlog contiene todas las historias de usuario pendientes, en progreso y c
 
 ---
 
+#### 📚 EJEMPLO: US-011: Implementar Caché para Productos Más Vendidos
+> **Nota**: Esta historia fue generada automáticamente desde ID-007 usando `./process-ideas.sh`
+
+**Como** administrador del sistema  
+**Quiero** cachear la consulta de productos más vendidos  
+**Para** reducir la latencia del endpoint y la carga en la base de datos
+
+**Criterios de Aceptación:**
+- [ ] El endpoint /api/products/bestsellers responde en menos de 50ms
+- [ ] La caché se actualiza automáticamente cada 5 minutos
+- [ ] Se reduce la carga de la base de datos en al menos 90%
+- [ ] La caché se invalida cuando se agrega o modifica un producto
+- [ ] Se implementan métricas de cache hit/miss ratio
+- [ ] El sistema funciona correctamente cuando la caché falla (fallback a DB)
+
+**Estimación**: 5 Story Points  
+**Epic**: Performance Optimization  
+**Prioridad**: Alta 🔴  
+**Servicios Afectados**: Products API  
+**Dependencias**: Ninguna  
+**Estado**: To Do
+
+**Notas Técnicas:**
+- Implementar usando Redis como caché distribuido
+- Configurar TTL de 5 minutos para la caché
+- Publicar ProductCacheInvalidatedEvent cuando se modifiquen productos
+- Implementar circuit breaker para fallo de Redis
+
+---
+
 ### 🟡 Prioridad Media - Importante
 
 #### US-004: Integración con Controlador MIDI
@@ -270,7 +300,7 @@ Este backlog contiene todas las historias de usuario pendientes, en progreso y c
 - US-009: Presets y Configuraciones DJ
 - US-010: Integración con Rekordbox y Software DJ
 
-**Total**: 10 historias
+**Total**: 11 historias (10 + 1 ejemplo)
 
 ---
 
