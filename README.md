@@ -4,10 +4,27 @@
 > **Frontend**: React 18+ con Vite  
 > **Backend**: Python con FastAPI  
 > **Cloud Platform**: Google Cloud Platform (GCP)  
+> **Observabilidad**: OpenTelemetry + Prometheus + Grafana + Jaeger (Open-Source)  
 > **Metodología**: Kanban  
 > **Estado**: Planeación y Diseño Arquitectónico
 
 Sistema de reproducción remota de Spotify distribuido basado en microservicios con arquitectura orientada a eventos, diseñado para integrarse con aplicaciones DJ profesionales como Rekordbox, Serato, Traktor y consolas DJ. Construido con React para el frontend y Python para el backend, desplegado completamente en GCP.
+
+## 🔍 Observabilidad como Principio Fundamental
+
+> **Regla de Oro**: Todo componente debe ser observable. La observabilidad no es opcional, es un **criterio obligatorio** para considerar cualquier funcionalidad como completa.
+
+Este framework implementa **observabilidad por diseño** utilizando tecnologías modernas, gratuitas y open-source:
+
+- **🔭 OpenTelemetry**: Estándar unificado para traces, metrics y logs
+- **📊 Prometheus**: Sistema de métricas y alerting
+- **📈 Grafana**: Visualización y dashboards en tiempo real
+- **🔎 Jaeger**: Distributed tracing end-to-end
+- **📝 Loki**: Log aggregation similar a Prometheus
+
+**Criterio de "Done"**: Una funcionalidad solo está completa cuando tiene traces, metrics, logs estructurados, dashboard y alertas configuradas.
+
+Ver: [ADR-010: Observability-First Architecture](docs/adr/010-observability-first-architecture.md) | [Observability Best Practices](docs/guides/observability-best-practices.md)
 
 ## 🏗️ Arquitectura
 
@@ -48,6 +65,14 @@ Este proyecto implementa un sistema de microservicios desacoplados que se comuni
 - **Containerization**: Cloud Run (serverless containers)
 - **Real-time**: Cloud Firestore for real-time sync
 - **Storage**: Cloud Storage (for assets, playlists, metadata)
+
+#### Observability Stack (Open-Source) 🔍
+- **OpenTelemetry**: Unified instrumentation (traces, metrics, logs)
+- **Prometheus**: Metrics collection and alerting
+- **Grafana**: Visualization and dashboards
+- **Jaeger**: Distributed tracing
+- **Loki + Promtail**: Log aggregation
+- **AlertManager**: Alert routing and notifications
 
 ## 📁 Estructura del Proyecto
 
