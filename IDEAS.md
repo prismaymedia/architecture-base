@@ -1,6 +1,6 @@
-# 💡 Captura de Ideas
+# 💡 Captura de Ideas - Remote Spotify Player DJ
 
-> **Propósito**: Archivo centralizado para capturar ideas rápidas antes de convertirlas en historias de usuario formales.
+> **Propósito**: Archivo centralizado para capturar ideas rápidas antes de convertirlas en historias de usuario formales para el sistema de control remoto de Spotify para aplicaciones DJ.
 
 ## 📝 Cómo Usar Este Archivo
 
@@ -13,19 +13,17 @@
 
 ## 🔴 Ideas - Alta Prioridad
 
-### [ID-001] Dashboard de Métricas en Tiempo Real
-
-- **Contexto**: Los administradores necesitan ver el estado del sistema sin entrar a múltiples servicios
-- **Problema**: Actualmente hay que revisar logs de cada microservicio individualmente
-- **Valor**: Reducir tiempo de diagnóstico de incidentes de 30min a 2min
+### [ID-001] Crossfade Automático entre Tracks
+- **Contexto**: DJs necesitan transiciones suaves entre tracks sin cortes abruptos
+- **Problema**: Spotify no tiene crossfade configurable desde API
+- **Valor**: Experiencia profesional de DJ con transiciones seamless
 - **Fecha**: 2025-11-14
 - **Estado**: 💭 Por refinar
 
-### [ID-002] Sistema de Retry Inteligente para Eventos
-
-- **Contexto**: Cuando un evento falla, se reintenta inmediatamente sin considerar la causa
-- **Problema**: Fallos transitorios (ej: DB timeout) se manejan igual que errores permanentes
-- **Valor**: Reducir falsos positivos en alertas y mejorar resiliencia
+### [ID-002] Detección Automática de BPM y Key
+- **Contexto**: DJs necesitan mezclar tracks con BPM y key compatibles
+- **Problema**: Spotify API no siempre provee BPM/key preciso
+- **Valor**: Mejores mezclas armónicas y rítmicas
 - **Fecha**: 2025-11-14
 - **Estado**: 💭 Por refinar
 
@@ -33,19 +31,24 @@
 
 ## 🟡 Ideas - Media Prioridad
 
-### [ID-003] Versionado Automático de Contratos de Eventos
-
-- **Contexto**: Los equipos modifican eventos sin coordinación entre servicios
-- **Problema**: Cambios breaking causan fallos en producción
-- **Valor**: Evitar incidentes por incompatibilidad de contratos
+### [ID-003] Sistema de Cue Points y Loops
+- **Contexto**: DJs profesionales usan cue points para marcar momentos clave
+- **Problema**: Spotify no soporta cue points nativamente
+- **Valor**: Workflow similar a software DJ profesional
 - **Fecha**: 2025-11-14
 - **Estado**: 💭 Por refinar
 
-### [ID-004] Simulador de Carga para Testing
+### [ID-004] Offline Mode con Cache
+- **Contexto**: DJs en venues con internet inestable
+- **Problema**: Dependencia total de conexión a internet para Spotify
+- **Valor**: Evitar interrupciones durante sets en vivo
+- **Fecha**: 2025-11-14
+- **Estado**: 💭 Por refinar
 
-- **Contexto**: No sabemos cómo se comporta el sistema bajo carga real
-- **Problema**: Incidentes en producción que no se detectan en QA
-- **Valor**: Detectar cuellos de botella antes de producción
+### [ID-005] Smart Playlist Recommendations
+- **Contexto**: DJs necesitan sugerencias inteligentes para el próximo track
+- **Problema**: Buscar tracks manualmente interrumpe el flujo
+- **Valor**: Mantener energía del set con sugerencias contextuales
 - **Fecha**: 2025-11-14
 - **Estado**: 💭 Por refinar
 
@@ -53,11 +56,18 @@
 
 ## 🟢 Ideas - Baja Prioridad
 
-### [ID-005] CLI para Operaciones Comunes
+### [ID-006] Grabación de Sesiones DJ
+- **Contexto**: DJs quieren grabar sus sets para compartir
+- **Problema**: No hay forma de grabar el output de Spotify legalmente
+- **Valor**: Portfolio de sets para promoción (respetando derechos)
+- **Fecha**: 2025-11-14
+- **Estado**: 💭 Por refinar
+- **Nota**: Verificar limitaciones legales y ToS de Spotify
 
-- **Contexto**: Operaciones repetitivas requieren múltiples comandos
-- **Problema**: Curva de aprendizaje alta para nuevos desarrolladores
-- **Valor**: Acelerar onboarding y reducir errores humanos
+### [ID-007] Visualizador de Espectro en Tiempo Real
+- **Contexto**: Feedback visual mejora la experiencia DJ
+- **Problema**: Sin acceso directo al audio stream para análisis
+- **Valor**: Visualización profesional similar a software DJ
 - **Fecha**: 2025-11-14
 - **Estado**: 💭 Por refinar
 
@@ -65,11 +75,17 @@
 
 ## 💭 Ideas - Por Clasificar
 
-### [ID-006] Integración con Herramienta de Monitoreo Externa
+### [ID-008] Integración con Luces y Visuales
+- **Contexto**: Shows profesionales usan iluminación sincronizada
+- **Problema**: _Pendiente de definir protocolo (DMX, Art-Net)_
+- **Valor**: _Experiencia inmersiva completa_
+- **Fecha**: 2025-11-14
+- **Estado**: 💭 Por refinar
 
-- **Contexto**: _Pendiente de definir_
-- **Problema**: _Pendiente de definir_
-- **Valor**: _Pendiente de definir_
+### [ID-009] Collaborative Playlists en Tiempo Real
+- **Contexto**: B2B DJ sets (dos DJs simultáneos)
+- **Problema**: _Pendiente de definir workflow de colaboración_
+- **Valor**: _Soporte para múltiples DJs controlando el mismo playback_
 - **Fecha**: 2025-11-14
 - **Estado**: 💭 Por refinar
 
@@ -197,7 +213,8 @@ New User Stories Generated: 1
 
 - **Sé específico** sobre el problema, no solo la solución
 - **Cuantifica el valor** cuando sea posible (tiempo ahorrado, errores evitados, etc.)
-- **Identifica el usuario** afectado (developer, admin, end-user, etc.)
+- **Identifica el usuario** afectado (DJ profesional, DJ amateur, venue manager, etc.)
+- **Considera limitaciones** de Spotify API y ToS
 - **No te preocupes por el formato** - lo importante es capturar la esencia
 - **Actualiza el estado** cuando la idea evolucione
 
@@ -205,8 +222,8 @@ New User Stories Generated: 1
 
 ## 📊 Estadísticas
 
-- **Total Ideas Capturadas**: 6
-- **Por Refinar**: 6
+- **Total Ideas Capturadas**: 9
+- **Por Refinar**: 9
 - **Convertidas a User Stories**: 0
 - **Descartadas**: 0
 - **Última Actualización**: 2025-11-14

@@ -1,23 +1,24 @@
-# Sistema de Microservicios E-commerce
+# Remote Spotify Player para Aplicaciones DJ
 
 > **Arquitectura**: Event-Driven Microservices  
 > **Frontend**: React 18+ con Vite  
 > **Backend**: Python con FastAPI  
+> **Cloud Platform**: Google Cloud Platform (GCP)  
 > **Metodología**: Kanban  
 > **Estado**: Planeación y Diseño Arquitectónico
 
-Sistema de e-commerce distribuido basado en microservicios con arquitectura orientada a eventos, construido con React para el frontend y Python para el backend.
+Sistema de reproducción remota de Spotify distribuido basado en microservicios con arquitectura orientada a eventos, diseñado para integrarse con aplicaciones DJ profesionales como Rekordbox, Serato, Traktor y consolas DJ. Construido con React para el frontend y Python para el backend, desplegado completamente en GCP.
 
 ## 🏗️ Arquitectura
 
-Este proyecto implementa un sistema de microservicios desacoplados que se comunican mediante eventos asíncronos. Cada servicio tiene su propia base de datos y es independientemente desplegable.
+Este proyecto implementa un sistema de microservicios desacoplados que se comunican mediante eventos asíncronos para permitir el control remoto de reproducción de Spotify desde aplicaciones DJ. Cada servicio tiene su propia base de datos y es independientemente desplegable en GCP.
 
 ### Microservicios
 
-- **Orders API**: Gestión del ciclo de vida de pedidos
-- **Inventory API**: Control de inventario y disponibilidad
-- **Payments API**: Procesamiento de pagos y transacciones
-- **Notifications API**: Envío de notificaciones multicanal
+- **Spotify Integration API**: Gestión de autenticación, conexión y comunicación con Spotify Web API
+- **Playback Control API**: Control de reproducción (play, pause, skip, volume, seek)
+- **Sync Service**: Sincronización en tiempo real del estado de reproducción entre dispositivos
+- **DJ Console Integration API**: Integración con protocolos MIDI/HID de consolas DJ y software DJ
 
 ### Stack Tecnológico
 
@@ -37,13 +38,16 @@ Este proyecto implementa un sistema de microservicios desacoplados que se comuni
 - **ORM**: SQLAlchemy 2.0
 - **Validation**: Pydantic v2
 
-#### Infrastructure
-- **Mensajería**: RabbitMQ (with aio-pika)
-- **Base de Datos**: PostgreSQL (database per service)
-- **Caché**: Redis
-- **Logging**: structlog (Python), console (frontend)
-- **Monitoring**: Prometheus + Grafana
-- **Containerization**: Docker + Docker Compose
+#### Infrastructure (GCP)
+- **Mensajería**: Google Cloud Pub/Sub (event-driven communication)
+- **Base de Datos**: Cloud SQL for PostgreSQL (database per service)
+- **Caché**: Cloud Memorystore for Redis
+- **Logging**: Google Cloud Logging (structured logging)
+- **Monitoring**: Google Cloud Monitoring + Cloud Trace
+- **API Gateway**: Cloud Endpoints / API Gateway
+- **Containerization**: Cloud Run (serverless containers)
+- **Real-time**: Cloud Firestore for real-time sync
+- **Storage**: Cloud Storage (for assets, playlists, metadata)
 
 ## 📁 Estructura del Proyecto
 
@@ -51,13 +55,13 @@ Este proyecto implementa un sistema de microservicios desacoplados que se comuni
 architecture-base/
 ├── .github/
 │   └── copilot-instructions.md          # Instrucciones globales para GitHub Copilot
-├── frontend/                             # Frontend React + Vite
+├── frontend/                             # Frontend React + Vite (DJ Controller UI)
 │   ├── src/
-│   │   ├── components/                   # React components
+│   │   ├── components/                   # React components (player controls, playlists)
 │   │   ├── pages/                        # Page components (routes)
-│   │   ├── hooks/                        # Custom hooks
+│   │   ├── hooks/                        # Custom hooks (useSpotifyPlayer, useSync)
 │   │   ├── services/                     # API clients
-│   │   ├── stores/                       # State management
+│   │   ├── stores/                       # State management (playback state)
 │   │   ├── types/                        # TypeScript types
 │   │   └── App.tsx                       # Main app component
 │   ├── package.json
@@ -70,46 +74,49 @@ architecture-base/
 │   │   ├── README.md                     # Índice de ADRs
 │   │   ├── 001-event-driven-architecture.md
 │   │   ├── 002-database-per-service.md
-│   │   ├── 003-iis-web-server.md         # Superseded
-│   │   ├── 004-bit-components-platform.md # Superseded
-│   │   ├── 005-react-vite-frontend.md    # ✨ NEW
-│   │   └── 006-python-backend.md         # ✨ NEW
+│   │   ├── 005-react-vite-frontend.md
+│   │   ├── 006-python-backend.md
+│   │   ├── 007-gcp-cloud-platform.md     # ✨ NEW - GCP as cloud provider
+│   │   ├── 008-spotify-api-integration.md # ✨ NEW - Spotify Web API
+│   │   └── 009-realtime-sync.md          # ✨ NEW - Real-time state sync
 │   ├── events/                           # Catálogo de eventos
 │   │   ├── README.md                     # Documentación de eventos
-│   │   ├── orders/                       # Eventos de Orders API
-│   │   ├── inventory/                    # Eventos de Inventory API
-│   │   ├── payments/                     # Eventos de Payments API
-│   │   └── notifications/                # Eventos de Notifications API
+│   │   ├── spotify/                      # Eventos de Spotify Integration API
+│   │   ├── playback/                     # Eventos de Playback Control API
+│   │   ├── sync/                         # Eventos de Sync Service
+│   │   └── dj-console/                   # Eventos de DJ Console Integration API
 │   ├── guides/                           # Guías de desarrollo
 │   │   ├── README.md                     # Índice de guías
 │   │   ├── saga-pattern.md               # Guía del patrón Saga
+│   │   ├── spotify-integration.md        # ✨ NEW - Guía de integración con Spotify
+│   │   ├── midi-protocol.md              # ✨ NEW - Protocolo MIDI/HID
 │   │   ├── product-owner-guide.md        # Manual para Product Owner
 │   │   ├── kanban-guide.md               # Guía de Kanban para el equipo
 │   │   ├── idea-to-task-flow.md          # 🔄 Flujo de ideas a tareas
 │   │   └── clickup-integration.md        # 🚀 Integración con ClickUp
 │   ├── backlog-template.md               # Plantilla de historia de usuario
 │   └── task-template.md                  # 📄 Plantilla de tarea técnica
-├── services/                             # Backend microservices (Python)
-│   ├── orders-api/
+├── services/                             # Backend microservices (Python on GCP Cloud Run)
+│   ├── spotify-integration-api/
 │   │   ├── app/
-│   │   │   ├── api/                      # API endpoints
+│   │   │   ├── api/                      # API endpoints (OAuth, token management)
 │   │   │   ├── core/                     # Config & settings
-│   │   │   ├── domain/                   # Business logic
+│   │   │   ├── domain/                   # Business logic (Spotify SDK wrapper)
 │   │   │   ├── application/              # Use cases
-│   │   │   ├── infrastructure/           # DB, messaging, etc.
+│   │   │   ├── infrastructure/           # GCP services, Pub/Sub, Cloud SQL
 │   │   │   └── main.py                   # FastAPI app
 │   │   ├── tests/
 │   │   ├── pyproject.toml
 │   │   └── .copilot-context.md          # Contexto específico del servicio
-│   ├── inventory-api/
+│   ├── playback-control-api/
 │   │   └── .copilot-context.md
-│   ├── payments-api/
+│   ├── sync-service/
 │   │   └── .copilot-context.md
-│   └── notifications-api/
+│   └── dj-console-integration-api/
 │       └── .copilot-context.md
 ├── shared/                               # Shared code
 │   ├── frontend/                         # Shared React components/utils
-│   └── backend/                          # Shared Python packages
+│   └── backend/                          # Shared Python packages (GCP clients, event schemas)
 ├── IDEAS.md                              # 💡 Captura rápida de ideas
 ├── BACKLOG.md                            # 📋 Product backlog con historias de usuario
 ├── docker-compose.yml                    # Local development setup
@@ -124,9 +131,9 @@ Este proyecto utiliza **metodología Kanban** para gestión continua del flujo d
 
 El [BACKLOG.md](BACKLOG.md) contiene todas las historias de usuario del proyecto:
 
-- **🔴 Prioridad Alta**: US-001 (Creación de Pedido), US-002 (Procesamiento de Pagos), US-003 (Reserva de Inventario)
-- **🟡 Prioridad Media**: US-004 (Notificaciones), US-005 (Historial), US-006 (Cancelación)
-- **🟢 Prioridad Baja**: US-007 (Dashboard), US-008 (Métricas), US-009 (Tracking), US-010 (PayPal)
+- **🔴 Prioridad Alta**: US-001 (Autenticación Spotify), US-002 (Control de Reproducción), US-003 (Sincronización en Tiempo Real)
+- **🟡 Prioridad Media**: US-004 (Integración MIDI), US-005 (Gestión de Playlists), US-006 (Estado de Playback)
+- **🟢 Prioridad Baja**: US-007 (Analytics de Uso), US-008 (Soporte Multi-dispositivo), US-009 (Presets DJ), US-010 (Integración Rekordbox)
 
 ### Estados del Kanban
 
@@ -294,8 +301,11 @@ Ver [scripts/idea_processor/README.md](scripts/idea_processor/README.md) para do
 ✅ **ADRs (Architecture Decision Records)**:
 - ADR-001: Event-Driven Architecture
 - ADR-002: Database per Service Pattern
-- ADR-003: IIS como Servidor Web
-- ADR-004: BIT como Plataforma de Componentes
+- ADR-005: React + Vite Frontend
+- ADR-006: Python + FastAPI Backend
+- ADR-007: GCP as Cloud Platform (NEW)
+- ADR-008: Spotify API Integration Strategy (NEW)
+- ADR-009: Real-time Sync with Cloud Firestore (NEW)
 
 ✅ **Catálogo de Eventos**:
 - Especificación completa de eventos
@@ -310,7 +320,7 @@ Ver [scripts/idea_processor/README.md](scripts/idea_processor/README.md) para do
 - Mejores prácticas
 
 ✅ **Gestión de Proyecto**:
-- BACKLOG.md con 10 historias de usuario iniciales
+- BACKLOG.md con 10 historias de usuario iniciales para sistema DJ remoto
 - Manual de Product Owner con metodología Kanban
 - Guía de Kanban para el equipo
 - Plantilla para agregar nuevas historias
@@ -327,27 +337,32 @@ Ver [scripts/idea_processor/README.md](scripts/idea_processor/README.md) para do
 
 ## 🚀 Próximos Pasos
 
-### Fase 1: Infraestructura Base
-- [ ] Configurar entorno de desarrollo
-- [ ] Setup de IIS y Application Pools
-- [ ] Configurar RabbitMQ / Azure Service Bus
-- [ ] Setup de bases de datos SQL Server
+### Fase 1: Infraestructura Base en GCP
+- [ ] Configurar proyecto GCP y habilitar APIs necesarias
+- [ ] Setup de Cloud Pub/Sub para mensajería entre servicios
+- [ ] Configurar Cloud SQL for PostgreSQL (instancias por servicio)
+- [ ] Setup de Cloud Memorystore for Redis (caché)
+- [ ] Configurar Cloud Run para servicios containerizados
+- [ ] Setup de Cloud Firestore para sincronización en tiempo real
 
-### Fase 2: Componentes BIT
-- [ ] Crear componentes de contratos (eventos, DTOs)
-- [ ] Implementar event bus abstractions
-- [ ] Crear shared infrastructure components
+### Fase 2: Integración con Spotify
+- [ ] Registrar aplicación en Spotify Developer Dashboard
+- [ ] Implementar flujo OAuth 2.0 para autenticación
+- [ ] Crear wrapper para Spotify Web API
+- [ ] Implementar manejo de tokens y refresh
+- [ ] Crear componentes compartidos para SDK de Spotify
 
 ### Fase 3: Implementación de Servicios
-- [ ] Orders API (implementación)
-- [ ] Inventory API (implementación)
-- [ ] Payments API (implementación)
-- [ ] Notifications API (implementación)
+- [ ] Spotify Integration API (autenticación, conexión)
+- [ ] Playback Control API (play, pause, skip, volume)
+- [ ] Sync Service (estado en tiempo real)
+- [ ] DJ Console Integration API (MIDI/HID protocols)
 
 ### Fase 4: Testing e Integración
 - [ ] Unit tests
-- [ ] Integration tests
-- [ ] Contract tests
+- [ ] Integration tests con Spotify API (mocks)
+- [ ] Contract tests para eventos
+- [ ] End-to-end tests de flujos DJ
 - [ ] End-to-end tests
 
 ### Fase 5: CI/CD y Deployment
@@ -419,63 +434,108 @@ Este proyecto está diseñado para ser construido con la asistencia de GitHub Co
 
 ## 📊 Flujo de Negocio Principal
 
-### Creación de Orden (Happy Path)
+### Control Remoto de Reproducción (Happy Path)
 
 ```
-1. Cliente crea orden → Orders API
-   └─> Publica: OrderCreatedEvent
+1. DJ autentica con Spotify → Spotify Integration API
+   └─> Publica: UserAuthenticatedEvent
+   └─> Obtiene tokens OAuth y dispositivos disponibles
 
-2. Inventory API reserva stock
-   └─> Publica: InventoryReservedEvent
+2. DJ inicia reproducción desde app → Playback Control API
+   └─> Publica: PlaybackCommandEvent (play, track_uri, device_id)
 
-3. Payments API procesa pago
-   └─> Publica: PaymentApprovedEvent
+3. Playback Control API envía comando a Spotify Web API
+   └─> Publica: PlaybackStateChangedEvent (playing, track_info, position)
 
-4. Orders API confirma orden
-   └─> Publica: OrderConfirmedEvent
+4. Sync Service distribuye estado a dispositivos conectados
+   └─> Actualiza Cloud Firestore con estado actual
+   └─> Publica: SyncStateUpdatedEvent
 
-5. Notifications API envía confirmación
-   └─> Email + Push notification
+5. Frontend/DJ Console recibe actualización en tiempo real
+   └─> UI se actualiza con estado de reproducción
+   └─> Controles MIDI reflejan estado actual
 ```
 
-### Compensación (Pago Falla)
+### Integración con Consola DJ (MIDI/HID)
+
+```
+1. DJ conecta consola física → DJ Console Integration API
+   └─> Detecta dispositivo MIDI/HID
+   └─> Publica: DeviceConnectedEvent
+
+2. DJ mueve fader de volumen en consola → MIDI message
+   └─> DJ Console Integration API captura evento
+   └─> Publica: VolumeChangeCommandEvent
+
+3. Playback Control API procesa comando
+   └─> Ajusta volumen en Spotify
+   └─> Publica: VolumeChangedEvent
+
+4. Sync Service sincroniza estado
+   └─> Actualiza todos los dispositivos conectados
+```
+
+### Compensación (Error de Spotify API)
 
 ```
 1-2. [Igual que arriba]
 
-3. Payments API rechaza pago
-   └─> Publica: PaymentRejectedEvent
+3. Spotify API retorna error (rate limit, token expirado, etc.)
+   └─> Publica: PlaybackCommandFailedEvent
 
-4. Inventory API libera stock
-   └─> Publica: InventoryReleasedEvent
+4. Playback Control API implementa retry con backoff
+   └─> Intenta renovar token si es necesario
+   └─> Reintenta comando hasta 3 veces
 
-5. Orders API cancela orden
-   └─> Publica: OrderCancelledEvent
+5. Si falla permanentemente:
+   └─> Publica: PlaybackErrorEvent
+   └─> Sync Service notifica a dispositivos
+   └─> Frontend muestra error al DJ
 
-6. Notifications API notifica cancelación
+6. DJ recibe feedback visual/MIDI
+   └─> Indicador LED en consola (rojo = error)
+   └─> Mensaje en pantalla con detalles del error
 ```
 
 ## 🛠️ Tecnologías Clave
 
-### Frontend
+### Frontend (DJ Controller UI)
 - **React**: UI library con component-based architecture
 - **Vite**: Build tool ultra-rápido con HMR instantáneo
 - **TypeScript**: Type safety para mejor DX
 - **React Router**: Client-side routing
-- **TanStack Query**: Server state management
-- **Zustand**: Client state management
+- **TanStack Query**: Server state management para API calls
+- **Zustand**: Client state management para estado de playback
 - **Tailwind CSS**: Utility-first CSS framework
+- **Web MIDI API**: Para integración directa con controladores MIDI
+- **Web Audio API**: Para visualizaciones y análisis de audio
 - **Vitest**: Test runner
 
-### Backend
-- **FastAPI**: Framework web moderno con auto-documentación
+### Backend (Microservices on GCP)
+- **FastAPI**: Framework web moderno con auto-documentación y async support
 - **Pydantic**: Validación de datos con type hints
-- **SQLAlchemy**: ORM para PostgreSQL
+- **SQLAlchemy**: ORM asíncrono para Cloud SQL PostgreSQL
 - **Uvicorn**: ASGI server de alto rendimiento
-- **aio-pika**: Cliente RabbitMQ asíncrono
+- **google-cloud-pubsub**: Cliente Python para Cloud Pub/Sub
+- **google-cloud-firestore**: Cliente para Firestore (real-time sync)
+- **spotipy**: Biblioteca Python para Spotify Web API
+- **python-rtmidi**: Para integración MIDI en backend
 - **pytest**: Testing framework
-- **structlog**: Logging estructurado
-- **Alembic**: Database migrations
+- **structlog**: Logging estructurado integrado con Cloud Logging
+- **Alembic**: Database migrations para Cloud SQL
+
+### GCP Services
+- **Cloud Run**: Serverless containers para microservices
+- **Cloud Pub/Sub**: Event-driven messaging entre servicios
+- **Cloud SQL**: PostgreSQL managed (database per service)
+- **Cloud Firestore**: NoSQL real-time database para estado de playback
+- **Cloud Memorystore**: Redis managed para caché
+- **Cloud Storage**: Almacenamiento de assets (artwork, metadata)
+- **Cloud Logging**: Logging centralizado y estructurado
+- **Cloud Monitoring**: Métricas y alertas
+- **Cloud Trace**: Distributed tracing
+- **Secret Manager**: Gestión segura de API keys (Spotify credentials)
+- **Cloud Endpoints / API Gateway**: API management y rate limiting
 
 ## 📝 Licencia
 
@@ -483,15 +543,18 @@ Este proyecto está diseñado para ser construido con la asistencia de GitHub Co
 
 ## 👥 Equipo
 
-- **Architecture Team**: Responsable de decisiones arquitectónicas
-- **Development Teams**: Un equipo por microservicio
+- **Architecture Team**: Responsable de decisiones arquitectónicas y patrones
+- **Backend Team**: Implementación de microservices en Python/GCP
+- **Frontend Team**: Desarrollo de UI de control DJ
+- **Integration Team**: Integración con Spotify API y protocolos MIDI
+- **DevOps Team**: Infraestructura GCP y CI/CD
 
 ## 📞 Contacto
 
-- Slack: #architecture
-- Email: architecture@company.com
+- Slack: #spotify-dj-remote
+- Email: dj-platform@company.com
 - Wiki: [Link al wiki interno]
 
 ---
 
-**Nota**: Este proyecto está en fase de planeación. La implementación seguirá las especificaciones documentadas en los archivos de contexto y guías.
+**Nota**: Este proyecto está en fase de planeación. La implementación seguirá las especificaciones documentadas en los archivos de contexto y guías. El objetivo es crear un sistema robusto y escalable para control remoto de Spotify desde aplicaciones DJ profesionales, desplegado completamente en Google Cloud Platform.
