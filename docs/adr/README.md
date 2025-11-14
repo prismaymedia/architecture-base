@@ -22,17 +22,24 @@ Cada ADR sigue la estructura:
 |---|--------|--------|-------|
 | [001](001-event-driven-architecture.md) | Event-Driven Architecture | Aceptado | 2025-11-14 |
 | [002](002-database-per-service.md) | Database per Service Pattern | Aceptado | 2025-11-14 |
-| [003](003-iis-web-server.md) | Uso de IIS como Servidor Web | Aceptado | 2025-11-14 |
-| [004](004-bit-components-platform.md) | BIT como Plataforma de Componentes | Aceptado | 2025-11-14 |
+| [003](003-iis-web-server.md) | Uso de IIS como Servidor Web | Superseded | 2025-11-14 |
+| [004](004-bit-components-platform.md) | BIT como Plataforma de Componentes | Superseded | 2025-11-14 |
+| [005](005-react-vite-frontend.md) | React con Vite para el Frontend | Aceptado | 2025-11-14 |
+| [006](006-python-backend.md) | Python para Backend de Microservicios | Aceptado | 2025-11-14 |
 
 ## Decisiones Fundamentales
 
-Las decisiones 001-004 forman el núcleo de nuestra arquitectura:
+Las decisiones 001-002, 005-006 forman el núcleo de nuestra arquitectura:
 
-1. **Event-Driven**: Comunicación asíncrona entre servicios
-2. **Database per Service**: Independencia de datos
-3. **IIS**: Plataforma de hosting
-4. **BIT Components**: Compartir código de manera estructurada
+1. **Event-Driven** (ADR-001): Comunicación asíncrona entre servicios
+2. **Database per Service** (ADR-002): Independencia de datos
+3. **React + Vite Frontend** (ADR-005): Framework moderno para el frontend
+4. **Python Backend** (ADR-006): Microservicios con FastAPI
+
+### Decisiones Superseded
+
+- **IIS Web Server** (ADR-003): Reemplazado por Python/Uvicorn + Vite dev server
+- **BIT Components** (ADR-004): Reemplazado por npm packages (frontend) y Python packages (backend)
 
 ## Proceso de ADR
 

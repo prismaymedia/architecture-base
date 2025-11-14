@@ -1,11 +1,12 @@
 # Sistema de Microservicios E-commerce
 
 > **Arquitectura**: Event-Driven Microservices  
-> **Tecnología**: .NET, IIS, BIT Components  
+> **Frontend**: React 18+ con Vite  
+> **Backend**: Python con FastAPI  
 > **Metodología**: Kanban  
 > **Estado**: Planeación y Diseño Arquitectónico
 
-Sistema de e-commerce distribuido basado en microservicios con arquitectura orientada a eventos, construido con BIT y desplegado en IIS.
+Sistema de e-commerce distribuido basado en microservicios con arquitectura orientada a eventos, construido con React para el frontend y Python para el backend.
 
 ## 🏗️ Arquitectura
 
@@ -20,21 +21,48 @@ Este proyecto implementa un sistema de microservicios desacoplados que se comuni
 
 ### Stack Tecnológico
 
-- **Backend**: .NET 8, ASP.NET Core Web API
-- **Servidor Web**: IIS (Internet Information Services)
-- **Componentes**: BIT para componentes reutilizables
-- **Mensajería**: RabbitMQ / Azure Service Bus
-- **Base de Datos**: SQL Server (database per service)
+#### Frontend
+- **Framework**: React 18+ (latest)
+- **Build Tool**: Vite 5+
+- **Language**: TypeScript 5+
+- **State Management**: React Query (TanStack Query) + Zustand
+- **Routing**: React Router v6
+- **UI Library**: shadcn/ui with Tailwind CSS
+- **Testing**: Vitest + React Testing Library
+
+#### Backend
+- **Language**: Python 3.12+
+- **Framework**: FastAPI
+- **Server**: Uvicorn (ASGI)
+- **ORM**: SQLAlchemy 2.0
+- **Validation**: Pydantic v2
+
+#### Infrastructure
+- **Mensajería**: RabbitMQ (with aio-pika)
+- **Base de Datos**: PostgreSQL (database per service)
 - **Caché**: Redis
-- **Logging**: Serilog
-- **Monitoring**: Application Insights
+- **Logging**: structlog (Python), console (frontend)
+- **Monitoring**: Prometheus + Grafana
+- **Containerization**: Docker + Docker Compose
 
 ## 📁 Estructura del Proyecto
 
 ```
-architecture/
+architecture-base/
 ├── .github/
 │   └── copilot-instructions.md          # Instrucciones globales para GitHub Copilot
+├── frontend/                             # Frontend React + Vite
+│   ├── src/
+│   │   ├── components/                   # React components
+│   │   ├── pages/                        # Page components (routes)
+│   │   ├── hooks/                        # Custom hooks
+│   │   ├── services/                     # API clients
+│   │   ├── stores/                       # State management
+│   │   ├── types/                        # TypeScript types
+│   │   └── App.tsx                       # Main app component
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── tsconfig.json
 ├── docs/
 │   ├── architecture/                     # Documentación arquitectónica
 │   │   └── README.md                     # Visión general de la arquitectura
@@ -42,8 +70,10 @@ architecture/
 │   │   ├── README.md                     # Índice de ADRs
 │   │   ├── 001-event-driven-architecture.md
 │   │   ├── 002-database-per-service.md
-│   │   ├── 003-iis-web-server.md
-│   │   └── 004-bit-components-platform.md
+│   │   ├── 003-iis-web-server.md         # Superseded
+│   │   ├── 004-bit-components-platform.md # Superseded
+│   │   ├── 005-react-vite-frontend.md    # ✨ NEW
+│   │   └── 006-python-backend.md         # ✨ NEW
 │   ├── events/                           # Catálogo de eventos
 │   │   ├── README.md                     # Documentación de eventos
 │   │   ├── orders/                       # Eventos de Orders API
@@ -59,8 +89,17 @@ architecture/
 │   │   └── clickup-integration.md        # 🚀 Integración con ClickUp
 │   ├── backlog-template.md               # Plantilla de historia de usuario
 │   └── task-template.md                  # 📄 Plantilla de tarea técnica
-├── services/
+├── services/                             # Backend microservices (Python)
 │   ├── orders-api/
+│   │   ├── app/
+│   │   │   ├── api/                      # API endpoints
+│   │   │   ├── core/                     # Config & settings
+│   │   │   ├── domain/                   # Business logic
+│   │   │   ├── application/              # Use cases
+│   │   │   ├── infrastructure/           # DB, messaging, etc.
+│   │   │   └── main.py                   # FastAPI app
+│   │   ├── tests/
+│   │   ├── pyproject.toml
 │   │   └── .copilot-context.md          # Contexto específico del servicio
 │   ├── inventory-api/
 │   │   └── .copilot-context.md
@@ -68,8 +107,12 @@ architecture/
 │   │   └── .copilot-context.md
 │   └── notifications-api/
 │       └── .copilot-context.md
+├── shared/                               # Shared code
+│   ├── frontend/                         # Shared React components/utils
+│   └── backend/                          # Shared Python packages
 ├── IDEAS.md                              # 💡 Captura rápida de ideas
 ├── BACKLOG.md                            # 📋 Product backlog con historias de usuario
+├── docker-compose.yml                    # Local development setup
 └── README.md                             # Este archivo
 ```
 
@@ -337,14 +380,25 @@ Este proyecto está diseñado para ser construido con la asistencia de GitHub Co
 
 ## 🛠️ Tecnologías Clave
 
-- **ASP.NET Core**: Framework web
-- **Entity Framework Core**: ORM
-- **MassTransit / NServiceBus**: Mensajería
-- **IIS**: Hosting
-- **BIT**: Gestión de componentes
-- **Serilog**: Logging estructurado
-- **Polly**: Resiliencia
-- **FluentValidation**: Validación
+### Frontend
+- **React**: UI library con component-based architecture
+- **Vite**: Build tool ultra-rápido con HMR instantáneo
+- **TypeScript**: Type safety para mejor DX
+- **React Router**: Client-side routing
+- **TanStack Query**: Server state management
+- **Zustand**: Client state management
+- **Tailwind CSS**: Utility-first CSS framework
+- **Vitest**: Test runner
+
+### Backend
+- **FastAPI**: Framework web moderno con auto-documentación
+- **Pydantic**: Validación de datos con type hints
+- **SQLAlchemy**: ORM para PostgreSQL
+- **Uvicorn**: ASGI server de alto rendimiento
+- **aio-pika**: Cliente RabbitMQ asíncrono
+- **pytest**: Testing framework
+- **structlog**: Logging estructurado
+- **Alembic**: Database migrations
 
 ## 📝 Licencia
 

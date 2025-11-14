@@ -1,8 +1,13 @@
 # Decisión Arquitectónica 004: BIT como Plataforma de Componentes
 
-**Estado**: Aceptado  
+**Estado**: Superseded by [ADR-005](005-react-vite-frontend.md) and [ADR-006](006-python-backend.md)  
 **Fecha**: 2025-11-14  
 **Decisores**: Equipo de Arquitectura  
+**Superseded Date**: 2025-11-14
+
+> **Nota**: Esta decisión fue reemplazada. Para compartir código usaremos:
+> - **Frontend**: npm packages para componentes React compartidos
+> - **Backend**: Python packages (pip/poetry) para código compartido entre microservicios  
 
 ## Contexto
 
