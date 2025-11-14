@@ -26,15 +26,17 @@ Cada ADR sigue la estructura:
 | [004](004-bit-components-platform.md) | BIT como Plataforma de Componentes | Superseded | 2025-11-14 |
 | [005](005-react-vite-frontend.md) | React con Vite para el Frontend | Aceptado | 2025-11-14 |
 | [006](006-python-backend.md) | Python para Backend de Microservicios | Aceptado | 2025-11-14 |
+| [007](007-trunk-based-development.md) | Trunk-Based Development Strategy | Aceptado | 2025-11-14 |
 
 ## Decisiones Fundamentales
 
-Las decisiones 001-002, 005-006 forman el núcleo de nuestra arquitectura:
+Las decisiones 001-002, 005-007 forman el núcleo de nuestra arquitectura:
 
 1. **Event-Driven** (ADR-001): Comunicación asíncrona entre servicios
 2. **Database per Service** (ADR-002): Independencia de datos
 3. **React + Vite Frontend** (ADR-005): Framework moderno para el frontend
 4. **Python Backend** (ADR-006): Microservicios con FastAPI
+5. **Trunk-Based Development** (ADR-007): Estrategia de control de versiones y cambios
 
 ### Decisiones Superseded
 

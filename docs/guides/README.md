@@ -14,6 +14,13 @@ Este directorio contiene guías y mejores prácticas para desarrollar en el sist
 - **[🔄 Integración del Procesador](integration-idea-processor.md)** - Workflows híbridos y mejores prácticas
 - **[🚀 GitHub Actions Setup](github-actions-setup.md)** - Procesamiento automático con GitHub Actions
 
+### Control de Versiones y Cambios
+- **[Version Control Workflow](version-control-workflow.md)** - 🌳 Estrategia de Trunk-Based Development
+- **[Git Quick Reference](git-quick-reference.md)** - 📋 Comandos rápidos para el día a día
+- **[Feature Flags Guide](feature-flags.md)** - 🚩 Gestión de feature toggles
+- **[Code Review Guidelines](code-review.md)** - 👥 Proceso de revisión de código
+- **[CI/CD Pipeline](cicd-pipeline.md)** - 🚀 Pipeline de integración y despliegue continuo
+
 ### Patrones Arquitectónicos
 - [Saga Pattern](saga-pattern.md) - Transacciones distribuidas
 - [CQRS Pattern](cqrs-pattern.md) - Separación de comandos y consultas
@@ -85,10 +92,11 @@ Este directorio contiene guías y mejores prácticas para desarrollar en el sist
 - Diseñar eventos si es necesario
 
 ### 2. Development
-- Crear branch desde `main`
+- Crear branch desde `main` siguiendo [Version Control Workflow](version-control-workflow.md)
 - Seguir coding standards
 - Escribir tests
 - Actualizar documentación
+- Usar [Feature Flags](feature-flags.md) para trabajo incompleto
 
 ### 3. Testing
 - Unit tests (mínimo 80% coverage)
@@ -96,7 +104,8 @@ Este directorio contiene guías y mejores prácticas para desarrollar en el sist
 - Contract tests para eventos
 
 ### 4. Code Review
-- Al menos 2 approvals requeridos
+- Seguir [Code Review Guidelines](code-review.md)
+- Al menos 1 approval requerido (2 para cambios críticos)
 - Verificar que sigue estándares
 - Validar tests
 
@@ -170,17 +179,18 @@ namespace Company.Service.Layer
 
 ## Git Workflow
 
+Utilizamos **Trunk-Based Development** como estrategia principal de control de versiones.
+
 ### Branches
 
-- `main`: Producción
-- `develop`: Integración
-- `feature/XXX-description`: Nuevas features
-- `bugfix/XXX-description`: Corrección de bugs
-- `hotfix/XXX-description`: Fixes urgentes en producción
+- `main`: Producción (siempre desplegable)
+- `feature/TASK-XXX-description`: Ramas de características (1-3 días máximo)
+- `hotfix/FIX-description`: Correcciones urgentes (< 1 día)
+- Release tags: `vX.Y.Z` (no ramas)
 
 ### Commits
 
-Formato de commit messages:
+Formato de commit messages siguiendo **Conventional Commits**:
 ```
 <type>(<scope>): <subject>
 
@@ -205,8 +215,24 @@ feat(orders): add order cancellation endpoint
 Implement POST /api/orders/{id}/cancel endpoint
 that allows users to cancel their pending orders.
 
-Closes #123
+Closes TASK-123
 ```
+
+### Flujo Completo
+
+Ver [Version Control Workflow](version-control-workflow.md) para guía detallada de:
+- Creación de branches
+- Proceso de commit y push
+- Mantenimiento de branches actualizados
+- Proceso de Pull Request
+- Gestión de releases
+- Proceso de hotfixes
+- Resolución de conflictos
+- Mejores prácticas
+
+### Feature Flags
+
+Para permitir merge de trabajo incompleto sin afectar producción, utilizamos feature flags. Ver [Feature Flags Guide](feature-flags.md) para detalles completos.
 
 ## Herramientas Recomendadas
 
