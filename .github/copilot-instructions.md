@@ -214,6 +214,8 @@ frontend/
 - **SÍ implementar `/health` endpoint** con dependency checks
 - **SÍ escribir tests de observabilidad** (metrics, traces, logs)
 - **SÍ documentar métricas** en README del servicio
+- **SÍ documentar APIs con OpenAPI/Swagger** en `/docs` y `/redoc` (Backend)
+- **SÍ documentar componentes con Storybook** (Frontend)
 
 #### Backend (Python)
 - SÍ usar type hints en todas las funciones
@@ -225,6 +227,8 @@ frontend/
 - SÍ usar pytest con fixtures para testing
 - **SÍ usar structlog para logs estructurados**
 - **SÍ instrumentar con @tracer.start_as_current_span() operaciones críticas**
+- **SÍ documentar todos los endpoints con docstrings y ejemplos**
+- **SÍ usar Pydantic Field() con descriptions para modelos**
 
 #### Frontend (React)
 - SÍ usar TypeScript strict mode
@@ -234,6 +238,8 @@ frontend/
 - SÍ implementar code splitting con React.lazy
 - SÍ usar Tailwind para estilos
 - SÍ seguir principios de composición sobre herencia
+- **SÍ documentar componentes públicos con Storybook**
+- **SÍ usar JSDoc/TSDoc para documentar props**
 
 ## Testing
 

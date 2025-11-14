@@ -237,6 +237,107 @@ function useMetrics() {
 }
 ```
 
+### Documentación de APIs (Obligatorio)
+
+#### Backend (Python/FastAPI)
+
+FastAPI genera automáticamente documentación OpenAPI/Swagger:
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel, Field
+
+app = FastAPI(
+    title="Spotify Integration API",
+    description="API para integración con Spotify Web API",
+    version="1.0.0",
+    docs_url="/docs",  # Swagger UI
+    redoc_url="/redoc"  # ReDoc UI
+)
+
+class OrderCreate(BaseModel):
+    """Modelo para crear una orden"""
+    user_id: str = Field(..., description="ID del usuario")
+    track_uri: str = Field(..., description="URI del track de Spotify")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "user_id": "user123",
+                "track_uri": "spotify:track:abc123"
+            }
+        }
+
+@app.post(
+    "/api/orders",
+    response_model=OrderResponse,
+    summary="Crear nueva orden",
+    description="Crea una orden de reproducción en Spotify",
+    tags=["Orders"]
+)
+async def create_order(order: OrderCreate):
+    """
+    Crea una nueva orden de reproducción.
+    
+    - **user_id**: Usuario que solicita la reproducción
+    - **track_uri**: URI del track de Spotify a reproducir
+    """
+    return await order_service.create(order)
+```
+
+**Herramientas Adicionales**:
+- **Reflect**: Sistema de documentación backend para APIs
+- **Stoplight**: Editor y documentación de OpenAPI
+- **Postman**: Colecciones documentadas para testing
+- **Redocly**: Documentación hermosa a partir de OpenAPI
+
+**Requisitos**:
+- ✅ Todos los endpoints deben tener docstrings
+- ✅ Todos los modelos Pydantic deben tener descriptions
+- ✅ Ejemplos de request/response en schemas
+- ✅ Tags para agrupar endpoints relacionados
+- ✅ Documentación accesible en `/docs` (Swagger) y `/redoc` (ReDoc)
+
+#### Frontend (React)
+
+Para componentes React, usar Storybook:
+
+```typescript
+// Component.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import { PlaybackControls } from './PlaybackControls';
+
+const meta: Meta<typeof PlaybackControls> = {
+  title: 'Features/Playback/PlaybackControls',
+  component: PlaybackControls,
+  parameters: {
+    docs: {
+      description: {
+        component: 'Controles de reproducción para DJ interface'
+      }
+    }
+  },
+  tags: ['autodocs']
+};
+
+export default meta;
+type Story = StoryObj<typeof PlaybackControls>;
+
+export const Playing: Story = {
+  args: {
+    isPlaying: true,
+    trackName: 'Test Track',
+    artistName: 'Test Artist'
+  }
+};
+```
+
+**Requisitos**:
+- ✅ Todos los componentes públicos deben tener stories
+- ✅ Props documentadas con JSDoc
+- ✅ Variantes comunes como stories
+- ✅ Storybook accesible en desarrollo
+
 ## Estándares de Observabilidad
 
 ### 1. Logs Estructurados
@@ -416,6 +517,9 @@ Una funcionalidad o servicio solo se considera **COMPLETO** cuando:
    - [ ] Traces documentadas
    - [ ] Runbooks para alertas
    - [ ] Troubleshooting guide
+   - [ ] **API Documentation**: Endpoints documentados en sistema de documentación
+     - Backend: OpenAPI/Swagger automático (FastAPI) o herramientas como Reflect
+     - Frontend: Storybook para componentes React
 
 6. **Testing de Observabilidad**:
    - [ ] Tests que validan emisión de metrics

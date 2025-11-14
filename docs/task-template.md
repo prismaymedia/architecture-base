@@ -218,6 +218,9 @@
 - [ ] Code reviewed and approved
 - [ ] Documentation updated (README, API docs, ADRs if needed)
 - [ ] **Observability documented**: Metrics and traces documented ✅
+- [ ] **API/Component documentation complete**:
+  - [ ] Backend: OpenAPI/Swagger accessible with docstrings ✅
+  - [ ] Frontend: Storybook with component stories ✅
 - [ ] Merged to main branch
 - [ ] Deployed to staging and verified
 - [ ] Demo completed with stakeholders

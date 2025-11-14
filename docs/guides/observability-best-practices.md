@@ -1236,6 +1236,16 @@ sum by (error_type) (
 - [ ] Dashboard de servicio creado en Grafana
 - [ ] Runbooks para alertas creados
 - [ ] Troubleshooting guide actualizado
+- [ ] **API Documentation** (Backend):
+  - [ ] OpenAPI/Swagger accesible en `/docs` y `/redoc`
+  - [ ] Todos los endpoints tienen docstrings descriptivos
+  - [ ] Modelos Pydantic con descriptions y ejemplos
+  - [ ] Tags para agrupar endpoints relacionados
+  - [ ] Documentación adicional en Reflect u otra herramienta (opcional)
+- [ ] **Component Documentation** (Frontend):
+  - [ ] Storybook configurado con todos los componentes públicos
+  - [ ] Props documentadas con JSDoc/TSDoc
+  - [ ] Stories para variantes comunes
 
 ### ✅ Testing
 

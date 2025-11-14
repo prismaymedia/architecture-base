@@ -546,6 +546,14 @@ A service is **COMPLETE** only when:
   - Traces documented
   - Runbooks created
   - Troubleshooting guide updated
+  - **API Documentation** (Backend):
+    - OpenAPI/Swagger accessible at `/docs` and `/redoc`
+    - All endpoints have descriptive docstrings
+    - Pydantic models with descriptions and examples
+    - Endpoints grouped with tags
+  - **Component Documentation** (Frontend):
+    - Storybook configured with public components
+    - Props documented with JSDoc/TSDoc
 
 ## 9. Implementation Checklist
 
@@ -584,6 +592,16 @@ Use this checklist when implementing observability for a service:
 - [ ] Document traces in service README
 - [ ] Create runbook for alerts
 - [ ] Update troubleshooting guide
+- [ ] **Setup API documentation** (Backend):
+  - [ ] Verify OpenAPI/Swagger accessible at `/docs` and `/redoc`
+  - [ ] Add docstrings to all endpoints
+  - [ ] Add descriptions and examples to Pydantic models
+  - [ ] Group endpoints with tags
+  - [ ] (Optional) Configure additional documentation tool like Reflect
+- [ ] **Setup component documentation** (Frontend):
+  - [ ] Configure Storybook
+  - [ ] Create stories for public components
+  - [ ] Document props with JSDoc/TSDoc
 
 ## References
 
