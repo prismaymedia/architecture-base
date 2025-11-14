@@ -6,22 +6,25 @@ Este sistema automatiza el flujo descrito en el problema: lee ideas del archivo 
 
 ## 🎯 Características
 
-- ✅ **Detección de Duplicados**: Usa embeddings de OpenAI para detectar similitudes semánticas
+- ✅ **Detección de Duplicados**: Usa IA (OpenAI o Google Gemini) para detectar similitudes semánticas
 - ✅ **Generación Automática**: Convierte ideas en historias de usuario siguiendo el template del proyecto
 - ✅ **Marcado Automático**: Marca ideas duplicadas en `IDEAS.md` con referencia a la US similar
 - ✅ **Actualización de Backlog**: Agrega automáticamente nuevas US a `BACKLOG.md`
 - ✅ **Modo Preview**: Opción `--dry-run` para ver cambios sin modificar archivos
 - ✅ **Interface Rica**: Output con colores y tablas usando Rich
+- ✅ **GitHub Actions**: Procesamiento automático en cada push a master
+- ✅ **Dual AI Support**: Compatible con OpenAI y Google Gemini
 
 ## 📋 Requisitos
 
 ### Software
 - Python 3.10 o superior
 - pip (gestor de paquetes de Python)
-- Cuenta de OpenAI con API key
+- Cuenta de OpenAI **O** Google Gemini con API key
 
 ### Credenciales
-- **OpenAI API Key**: Necesaria para detección de similitud y generación de historias
+- **OpenAI API Key**: Para usar OpenAI (opcional)
+- **Gemini API Key**: Para usar Google Gemini (recomendado para GitHub Actions)
 
 ## 🚀 Instalación
 
@@ -35,17 +38,43 @@ cd /home/runner/work/architecture-base/architecture-base
 pip install -r scripts/idea_processor/requirements.txt
 ```
 
-### 2. Configurar OpenAI API Key
+### 2. Configurar API Keys
+
+#### Opción A: Usar Google Gemini (Recomendado para GitHub Actions)
 
 ```bash
-# Opción 1: Variable de entorno (recomendado)
-export OPENAI_API_KEY='sk-your-api-key-here'
+# Variable de entorno
+export GEMINI_API_KEY='your-gemini-api-key-here'
+export AI_PROVIDER='gemini'
 
-# Opción 2: Crear archivo .env en el directorio raíz
-echo "OPENAI_API_KEY=sk-your-api-key-here" > .env
+# O crear archivo .env en el directorio raíz
+cat > .env << EOF
+AI_PROVIDER=gemini
+GEMINI_API_KEY=your-gemini-api-key-here
+GEMINI_MODEL=gemini-1.5-pro
+EOF
 ```
 
-Para obtener tu API key:
+Para obtener tu Gemini API key:
+1. Visita https://aistudio.google.com/app/apikey
+2. Crea una nueva API key
+3. Copia el valor y configúralo como variable de entorno
+
+#### Opción B: Usar OpenAI
+
+```bash
+# Variable de entorno
+export OPENAI_API_KEY='sk-your-api-key-here'
+export AI_PROVIDER='openai'
+
+# O crear archivo .env
+cat > .env << EOF
+AI_PROVIDER=openai
+OPENAI_API_KEY=sk-your-api-key-here
+EOF
+```
+
+Para obtener tu OpenAI API key:
 1. Visita https://platform.openai.com/api-keys
 2. Crea una nueva API key
 3. Copia el valor y configúralo como variable de entorno
@@ -83,6 +112,75 @@ python -m scripts.idea_processor.cli --dry-run --threshold 0.85 --verbose
 
 ```bash
 python -m scripts.idea_processor.cli --help
+```
+
+## 🤖 GitHub Actions - Procesamiento Automático
+
+### Configuración
+
+El repositorio incluye un workflow de GitHub Actions que procesa ideas automáticamente en cada push a la rama `master` que modifique el archivo `IDEAS.md`.
+
+**Archivo**: `.github/workflows/process-ideas-gemini.yml`
+
+### Paso 1: Configurar Secret en GitHub
+
+1. Ve a tu repositorio en GitHub
+2. Settings → Secrets and variables → Actions
+3. Click en "New repository secret"
+4. Nombre: `GEMINI_API_KEY`
+5. Valor: Tu API key de Google Gemini
+6. Click en "Add secret"
+
+### Paso 2: Activar el Workflow
+
+El workflow se activa automáticamente cuando:
+- Haces push a la rama `master` o `main`
+- El archivo `IDEAS.md` ha sido modificado
+
+### Qué Hace el Workflow
+
+1. ✅ Instala Python y dependencias
+2. ✅ Ejecuta el procesador de ideas con Gemini AI
+3. ✅ Detecta duplicados y genera user stories
+4. ✅ Commitea y pushea cambios automáticamente
+5. ✅ Crea un resumen en la pestaña Actions
+
+### Ejemplo de Uso
+
+```bash
+# 1. Agregar ideas a IDEAS.md
+vim IDEAS.md
+# Agrega tu idea con estado "💭 Por refinar"
+
+# 2. Commit y push
+git add IDEAS.md
+git commit -m "feat: add new idea for caching"
+git push origin master
+
+# 3. El workflow se ejecuta automáticamente
+# Ve a la pestaña "Actions" en GitHub para ver el progreso
+
+# 4. Revisa los cambios
+git pull
+# Verás IDEAS.md actualizado y nuevas US en BACKLOG.md
+```
+
+### Ver Resultados
+
+- **Pestaña Actions**: Ve el log completo de ejecución
+- **Commits**: El bot crea commits con el formato "🤖 Auto-process ideas..."
+- **Summary**: Cada ejecución genera un resumen de cambios
+
+### Desactivar el Workflow
+
+Si prefieres ejecutar manualmente:
+
+```bash
+# Opción 1: Eliminar el archivo
+rm .github/workflows/process-ideas-gemini.yml
+
+# Opción 2: Deshabilitar en GitHub
+# Settings → Actions → Selecciona el workflow → Disable workflow
 ```
 
 ## 🔄 Flujo de Trabajo

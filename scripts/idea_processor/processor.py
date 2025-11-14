@@ -12,8 +12,6 @@ from rich import print as rprint
 from .config import config
 from .models import Idea, UserStory, SimilarityResult
 from .parser import MarkdownParser, load_file_content, save_file_content
-from .similarity import SimilarityChecker
-from .generator import UserStoryGenerator
 
 
 console = Console()
@@ -25,10 +23,21 @@ class IdeaProcessor:
     def __init__(self, dry_run: bool = False):
         self.dry_run = dry_run or config.dry_run
         self.parser = MarkdownParser()
-        self.similarity_checker = SimilarityChecker()
-        self.generator = UserStoryGenerator()
         
-        console.print("\n[bold cyan]🚀 Idea Processor Initialized[/bold cyan]\n")
+        # Select AI provider based on configuration
+        if config.ai_provider == "gemini":
+            from .similarity_gemini import GeminiSimilarityChecker
+            from .generator_gemini import GeminiUserStoryGenerator
+            self.similarity_checker = GeminiSimilarityChecker()
+            self.generator = GeminiUserStoryGenerator()
+            console.print("\n[bold cyan]🚀 Idea Processor Initialized (using Gemini AI)[/bold cyan]\n")
+        else:
+            from .similarity import SimilarityChecker
+            from .generator import UserStoryGenerator
+            self.similarity_checker = SimilarityChecker()
+            self.generator = UserStoryGenerator()
+            console.print("\n[bold cyan]🚀 Idea Processor Initialized (using OpenAI)[/bold cyan]\n")
+        
         if self.dry_run:
             console.print("[yellow]⚠️  Running in DRY RUN mode - no files will be modified[/yellow]\n")
     

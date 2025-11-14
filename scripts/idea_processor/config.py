@@ -20,10 +20,17 @@ class Config(BaseModel):
     backlog_file: Path = repo_root / "BACKLOG.md"
     backlog_template_file: Path = repo_root / "docs" / "backlog-template.md"
     
+    # AI Provider selection
+    ai_provider: str = os.getenv("AI_PROVIDER", "openai")  # "openai" or "gemini"
+    
     # OpenAI settings
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
     openai_model: str = "gpt-4o"
     embedding_model: str = "text-embedding-3-small"
+    
+    # Gemini settings
+    gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
+    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-1.5-pro")
     
     # Similarity threshold (0.0 - 1.0)
     similarity_threshold: float = 0.80  # Ideas with similarity > 80% are marked as duplicates
