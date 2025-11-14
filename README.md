@@ -227,6 +227,54 @@ IDEAS.md → BACKLOG.md → Technical Tasks → ClickUp
 
 Ver [idea-to-task-flow.md](docs/guides/idea-to-task-flow.md) para detalles completos.
 
+### 🤖 Automatización con Scripts
+
+Además de usar Copilot interactivamente, puedes usar el **procesador automático de ideas**:
+
+```bash
+# Procesar ideas automáticamente
+./process-ideas.sh
+
+# O directamente con Python
+python -m scripts.idea_processor.cli
+
+# Modo preview (sin modificar archivos)
+./process-ideas.sh --dry-run
+```
+
+**Qué hace el script:**
+1. ✅ Lee todas las ideas de `IDEAS.md` con estado "💭 Por refinar"
+2. ✅ Detecta duplicados usando IA (OpenAI o Google Gemini)
+3. ✅ Marca ideas duplicadas con referencia a US similar
+4. ✅ Genera historias de usuario automáticamente para ideas únicas
+5. ✅ Agrega nuevas US a `BACKLOG.md` en la sección de prioridad correcta
+6. ✅ Actualiza `IDEAS.md` marcando ideas como convertidas
+
+### 🔄 GitHub Actions - Procesamiento Automático
+
+**¡NUEVO!** El procesador se ejecuta automáticamente con cada push a `master`:
+
+```bash
+# 1. Agrega ideas a IDEAS.md
+vim IDEAS.md  # Agrega idea con estado "💭 Por refinar"
+
+# 2. Commit y push
+git commit -am "feat: add new idea"
+git push origin master
+
+# 3. GitHub Actions procesa automáticamente
+# - Usa Google Gemini AI
+# - Detecta duplicados
+# - Genera user stories
+# - Commitea cambios automáticamente
+```
+
+**Setup**: Solo necesitas configurar el secret `GEMINI_API_KEY` en GitHub Settings.
+
+Ver [docs/guides/github-actions-setup.md](docs/guides/github-actions-setup.md) para guía completa.
+
+Ver [scripts/idea_processor/README.md](scripts/idea_processor/README.md) para documentación completa.
+
 ## 🎯 Fase Actual: Planeación
 
 **Este proyecto está en fase de planeación arquitectónica**. No contiene código de implementación todavía.
@@ -272,6 +320,10 @@ Ver [idea-to-task-flow.md](docs/guides/idea-to-task-flow.md) para detalles compl
 - task-template.md con formato completo de tareas técnicas
 - Flujo automatizado: Ideas → User Stories → Tasks → ClickUp
 - Guía de integración con ClickUp (manual, CSV, API)
+- **🤖 Procesador Automático de Ideas** (scripts/idea_processor/):
+  - Detección automática de duplicados con IA
+  - Generación de historias de usuario desde ideas
+  - Actualización automática de IDEAS.md y BACKLOG.md
 
 ## 🚀 Próximos Pasos
 
