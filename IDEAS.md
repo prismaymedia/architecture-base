@@ -98,6 +98,101 @@ Cuando tengas varias ideas acumuladas:
 
 ---
 
+## 📚 Ejemplo Completo de Conversión
+
+### Antes del Procesamiento
+
+```markdown
+### [ID-007] Cache de Productos Más Vendidos
+
+- **Contexto**: El endpoint /api/products/bestsellers se consulta 1000+ veces/min
+- **Problema**: Cada request golpea la DB, causando latencia de 800ms
+- **Valor**: Reducir latencia a <50ms y carga de DB en 90%
+- **Fecha**: 2025-11-14
+- **Estado**: 💭 Por refinar
+```
+
+### Después de Ejecutar `./process-ideas.sh`
+
+**En IDEAS.md:**
+```markdown
+### [ID-007] Cache de Productos Más Vendidos
+
+- **Contexto**: El endpoint /api/products/bestsellers se consulta 1000+ veces/min
+- **Problema**: Cada request golpea la DB, causando latencia de 800ms
+- **Valor**: Reducir latencia a <50ms y carga de DB en 90%
+- **Fecha**: 2025-11-14
+- **Estado**: ✅ Convertida a US-011
+```
+
+**En BACKLOG.md (agregado automáticamente):**
+```markdown
+#### US-011: Implementar Caché para Productos Más Vendidos
+**Como** administrador del sistema
+**Quiero** cachear la consulta de productos más vendidos
+**Para** reducir la latencia del endpoint y la carga en la base de datos
+
+**Criterios de Aceptación:**
+- [ ] El endpoint /api/products/bestsellers responde en menos de 50ms
+- [ ] La caché se actualiza automáticamente cada 5 minutos
+- [ ] Se reduce la carga de la base de datos en al menos 90%
+- [ ] La caché se invalida cuando se agrega o modifica un producto
+- [ ] Se implementan métricas de cache hit/miss ratio
+- [ ] El sistema funciona correctamente cuando la caché falla (fallback a DB)
+
+**Estimación**: 5 Story Points
+**Epic**: Performance Optimization
+**Prioridad**: Alta 🔴
+**Servicios Afectados**: Products API
+**Dependencias**: Ninguna
+**Estado**: To Do
+
+**Notas Técnicas:**
+- Implementar usando Redis como caché distribuido
+- Configurar TTL de 5 minutos para la caché
+- Publicar ProductCacheInvalidatedEvent cuando se modifiquen productos
+- Implementar circuit breaker para fallo de Redis
+```
+
+### Resultado del Procesador Automático
+
+```
+🚀 Idea Processor Initialized
+
+Step 1: Loading files...
+✓ Found 7 ideas
+✓ Found 10 existing user stories
+
+Step 2: Parsing ideas and user stories...
+📝 Ideas to process: 1
+
+Step 3: Checking for duplicates...
+Checking ID-007: Cache de Productos Más Vendidos
+  ✓ Unique idea
+
+Step 4: Generating user stories from 1 unique ideas...
+Generating user story for ID-007...
+  ✓ Generated US-011: Implementar Caché para Productos Más Vendidos
+
+┌────────────────────────────────────────────────────────────────────┐
+│                    ✨ Generated User Stories                       │
+├────────┬──────────────────────────┬────────────┬──────┬────────────┤
+│ US ID  │ Title                    │ Priority   │ SP   │ Epic       │
+├────────┼──────────────────────────┼────────────┼──────┼────────────┤
+│ US-011 │ Implementar Caché...     │ Alta 🔴    │ 5    │ Perf. Opt. │
+└────────┴──────────────────────────┴────────────┴──────┴────────────┘
+
+Step 5: Updating files...
+✓ IDEAS.md updated
+✓ BACKLOG.md updated
+
+📊 Processing Complete!
+Duplicate Ideas Found: 0
+New User Stories Generated: 1
+```
+
+---
+
 ## 🎯 Tips para Capturar Buenas Ideas
 
 - **Sé específico** sobre el problema, no solo la solución
