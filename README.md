@@ -135,11 +135,36 @@ El [BACKLOG.md](BACKLOG.md) contiene todas las historias de usuario del proyecto
 3. **In Review**: En code review o QA (WIP: máximo 3)
 4. **Done**: Completadas y en producción
 
+### Métricas del Proyecto
+
+El archivo [`project_config.yaml`](project_config.yaml) centraliza las métricas de tareas:
+
+```yaml
+project_metrics:
+  backlog_tasks_count: 0          # Tareas en backlog
+  qa_tasks_pending_count: 0       # Tareas pendientes en QA
+  qa_tasks_in_progress_count: 0   # Tareas en curso en QA
+```
+
+**Actualización manual**: Los valores deben actualizarse manualmente según el estado real de las tareas.
+
+**Uso programático**: Scripts Python, herramientas CI/CD y documentación pueden leer estos valores:
+
+```python
+import yaml
+with open('project_config.yaml') as f:
+    config = yaml.safe_load(f)
+    backlog_count = config['project_metrics']['backlog_tasks_count']
+```
+
+Ver [Guía de Uso de project_config.yaml](docs/guides/project-config-usage.md) para más detalles.
+
 ### Documentación de Gestión
 
 - 📖 [Manual de Product Owner](docs/guides/product-owner-guide.md) - Gestión del backlog con Kanban
 - 📖 [Guía de Kanban](docs/guides/kanban-guide.md) - Workflow para el equipo
 - 📝 [Plantilla de Historia](docs/backlog-template.md) - Para agregar nuevas features
+- 📊 [Uso de project_config.yaml](docs/guides/project-config-usage.md) - Métricas centralizadas
 
 ## 💡 Gestión de Ideas y Tareas
 
