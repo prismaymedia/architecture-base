@@ -1,0 +1,5 @@
+# Archivo de configuración para la valoración de tareas
+project_metrics:
+  backlog_tasks_count: 0          # Número de tareas en backlog (Actualizar manualmente).
+  qa_tasks_pending_count: 0       # Número de tareas pendientes en QA (Actualizar manualmente).
+  qa_tasks_in_progress_count: 0   # Número de tareas en curso en QA (Actualizar manualmente).
