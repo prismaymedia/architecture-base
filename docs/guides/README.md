@@ -4,6 +4,9 @@ Este directorio contiene guías y mejores prácticas para desarrollar en el sist
 
 ## Contenido
 
+### Getting Started
+- **[Developer Setup Guide](developer-setup.md)** - 🚀 Configuración inicial para nuevos desarrolladores
+
 ### Gestión de Producto
 - [Product Owner Guide](product-owner-guide.md) - Manual del Product Owner con Kanban
 - [Kanban Guide](kanban-guide.md) - Guía de Kanban para el equipo
@@ -16,6 +19,7 @@ Este directorio contiene guías y mejores prácticas para desarrollar en el sist
 
 ### Control de Versiones y Cambios
 - **[Version Control Workflow](version-control-workflow.md)** - 🌳 Estrategia de Trunk-Based Development
+- **[Version Control Comparison](version-control-comparison.md)** - 📊 Comparación de estrategias y guía de decisión
 - **[Git Quick Reference](git-quick-reference.md)** - 📋 Comandos rápidos para el día a día
 - **[Feature Flags Guide](feature-flags.md)** - 🚩 Gestión de feature toggles
 - **[Code Review Guidelines](code-review.md)** - 👥 Proceso de revisión de código
