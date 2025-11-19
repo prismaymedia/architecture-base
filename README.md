@@ -169,13 +169,23 @@ El [BACKLOG.md](BACKLOG.md) contiene todas las historias de usuario del proyecto
 
 ### Métricas del Proyecto
 
-El archivo [`project_config.yaml`](project_config.yaml) centraliza las métricas de tareas:
+El archivo [`project_config.yaml`](project_config.yaml) centraliza las métricas de tareas y configuración del proyecto:
 
 ```yaml
 project_metrics:
   backlog_tasks_count: 0          # Tareas en backlog
   qa_tasks_pending_count: 0       # Tareas pendientes en QA
   qa_tasks_in_progress_count: 0   # Tareas en curso en QA
+
+documentation:
+  languages:
+    default: es                    # Idioma por defecto
+    supported: [es, en]            # Idiomas soportados
+  environments:
+    development:
+      language: es                 # Idioma para desarrollo
+      fallback_language: en        # Idioma de respaldo
+    # ... staging, production
 ```
 
 **Actualización manual**: Los valores deben actualizarse manualmente según el estado real de las tareas.
@@ -187,6 +197,15 @@ import yaml
 with open('project_config.yaml') as f:
     config = yaml.safe_load(f)
     backlog_count = config['project_metrics']['backlog_tasks_count']
+    doc_language = config['documentation']['languages']['default']
+```
+
+**Variables de entorno**: Se puede sobrescribir la configuración de idioma:
+
+```bash
+# En .env o variables de entorno
+DOC_LANGUAGE=en                  # Sobrescribir idioma
+ENVIRONMENT=staging              # Entorno actual
 ```
 
 Ver [Guía de Uso de project_config.yaml](docs/guides/project-config-usage.md) para más detalles.
@@ -196,7 +215,7 @@ Ver [Guía de Uso de project_config.yaml](docs/guides/project-config-usage.md) p
 - 📖 [Manual de Product Owner](docs/guides/product-owner-guide.md) - Gestión del backlog con Kanban
 - 📖 [Guía de Kanban](docs/guides/kanban-guide.md) - Workflow para el equipo
 - 📝 [Plantilla de Historia](docs/backlog-template.md) - Para agregar nuevas features
-- 📊 [Uso de project_config.yaml](docs/guides/project-config-usage.md) - Métricas centralizadas
+- 📊 [Uso de project_config.yaml](docs/guides/project-config-usage.md) - Métricas centralizadas y configuración de idiomas
 
 ## 💡 Gestión de Ideas y Tareas
 
