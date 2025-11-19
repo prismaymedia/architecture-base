@@ -102,12 +102,23 @@
 - [ ] Integration tests for external dependencies
 - [ ] Contract tests for events published/consumed
 
-**Observability**:
-- [ ] Structured logging with Serilog
-- [ ] Log at appropriate levels (Trace/Debug/Info/Warning/Error/Critical)
-- [ ] Include correlation ID in all logs
-- [ ] Add metrics for key operations (duration, count, errors)
-- [ ] Implement health checks
+**Observability** (Mandatory - Criterion for "Done"):
+- [ ] **OpenTelemetry SDK** integrated with traces, metrics, and logs
+- [ ] **Traces**: Instrument with `@tracer.start_as_current_span()` for all critical operations
+- [ ] **Metrics**: RED metrics (Rate, Errors, Duration) exposed at `/metrics` endpoint
+  - [ ] `http_requests_total` counter with labels (method, endpoint, status)
+  - [ ] `http_request_duration_seconds` histogram
+  - [ ] Event processing metrics if applicable
+  - [ ] Business-specific metrics (e.g., orders_created_total)
+- [ ] **Logs**: Structured logging with JSON format
+  - [ ] Include correlation_id, trace_id, span_id in all logs
+  - [ ] Log at appropriate levels (info for business events, error for failures)
+  - [ ] No sensitive data logged (passwords, tokens, PII)
+- [ ] **Context Propagation**: Trace context propagated in HTTP headers and events
+- [ ] **Dashboard**: Grafana dashboard created with key visualizations
+- [ ] **Alerts**: Prometheus alerts configured for critical errors
+- [ ] **Health Check**: `/health` endpoint returns service status
+- [ ] **Tests**: Unit tests for metric emission and log structure
 
 ---
 
@@ -200,14 +211,20 @@
 
 - [ ] Code implemented and follows coding standards
 - [ ] All acceptance criteria met (functional + technical)
+- [ ] **🔍 Observability complete**: Traces, metrics, logs, dashboard, alerts ✅
 - [ ] Unit tests written and passing (coverage ≥ 80%)
+- [ ] **Tests for observability**: Metric emission, trace creation, log structure ✅
 - [ ] Integration tests passing
 - [ ] Code reviewed and approved
 - [ ] Documentation updated (README, API docs, ADRs if needed)
+- [ ] **Observability documented**: Metrics and traces documented ✅
+- [ ] **API/Component documentation complete**:
+  - [ ] Backend: OpenAPI/Swagger accessible with docstrings ✅
+  - [ ] Frontend: Storybook with component stories ✅
 - [ ] Merged to main branch
 - [ ] Deployed to staging and verified
 - [ ] Demo completed with stakeholders
-- [ ] Monitoring/alerts configured
+- [ ] **Monitoring/alerts configured and validated** ✅
 ```
 
 ---

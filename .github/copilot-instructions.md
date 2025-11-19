@@ -28,21 +28,46 @@ Este es un **sistema de Remote Spotify Player para aplicaciones DJ** construido 
 
 ## Principios de Diseño
 
-### 1. Arquitectura de Microservicios
+### 1. Observabilidad como Principio Rector (OBLIGATORIO) 🔍
+
+> **Regla de Oro**: Todo componente debe ser observable. La observabilidad no es opcional.
+
+**Criterio de "Done"**: Una funcionalidad solo está completa cuando tiene:
+- ✅ **Traces**: Instrumentación con OpenTelemetry en operaciones críticas
+- ✅ **Metrics**: RED metrics (Rate, Errors, Duration) + métricas de negocio
+- ✅ **Logs**: Logs estructurados en JSON con trace context
+- ✅ **Dashboard**: Visualizaciones en Grafana
+- ✅ **Alerts**: Alertas configuradas para errores críticos
+- ✅ **Tests**: Tests de observabilidad (metrics, traces, logs)
+
+**Stack Open-Source Obligatorio**:
+- OpenTelemetry (instrumentación unificada)
+- Prometheus (métricas y alerting)
+- Grafana (visualización)
+- Jaeger (distributed tracing)
+- Loki (log aggregation)
+
+Ver: [ADR-010: Observability-First Architecture](docs/adr/010-observability-first-architecture.md) y [Observability Best Practices](docs/guides/observability-best-practices.md)
+
+### 2. Arquitectura de Microservicios
+
+### 2. Arquitectura de Microservicios
 
 - Cada servicio debe ser independiente y autónomo
 - Base de datos por servicio (Database per Service pattern)
 - Desacoplamiento mediante eventos
 - Sin dependencias directas entre servicios
 
-### 2. Event-Driven Patterns
+### 3. Event-Driven Patterns
+
+### 3. Event-Driven Patterns
 
 - **Event Sourcing**: Considerar para servicios que requieren auditoría completa
 - **CQRS**: Separación de comandos y consultas donde tenga sentido
 - **Saga Pattern**: Para transacciones distribuidas
 - **Event Notification**: Para notificar cambios de estado
 
-### 3. Resiliencia
+### 4. Resiliencia
 
 - Circuit Breaker para llamadas externas
 - Retry policies con backoff exponencial
@@ -179,6 +204,19 @@ frontend/
 - SÍ usar logging estructurado
 - SÍ documentar todos los eventos publicados/consumidos
 
+#### Observabilidad (OBLIGATORIO) 🔍
+- **SÍ instrumentar TODOS los servicios con OpenTelemetry** (traces, metrics, logs)
+- **SÍ exponer métricas RED** (Rate, Errors, Duration) en `/metrics`
+- **SÍ usar logs estructurados JSON** con correlation_id, trace_id, span_id
+- **SÍ propagar trace context** en HTTP headers y eventos
+- **SÍ crear dashboards en Grafana** para cada servicio
+- **SÍ configurar alertas en Prometheus** para errores críticos
+- **SÍ implementar `/health` endpoint** con dependency checks
+- **SÍ escribir tests de observabilidad** (metrics, traces, logs)
+- **SÍ documentar métricas** en README del servicio
+- **SÍ documentar APIs con OpenAPI/Swagger** en `/docs` y `/redoc` (Backend)
+- **SÍ documentar componentes con Storybook** (Frontend)
+
 #### Backend (Python)
 - SÍ usar type hints en todas las funciones
 - SÍ usar async/await para operaciones I/O
@@ -187,6 +225,10 @@ frontend/
 - SÍ seguir Clean Architecture (domain, application, infrastructure)
 - SÍ usar black + ruff para formateo consistente
 - SÍ usar pytest con fixtures para testing
+- **SÍ usar structlog para logs estructurados**
+- **SÍ instrumentar con @tracer.start_as_current_span() operaciones críticas**
+- **SÍ documentar todos los endpoints con docstrings y ejemplos**
+- **SÍ usar Pydantic Field() con descriptions para modelos**
 
 #### Frontend (React)
 - SÍ usar TypeScript strict mode
@@ -196,6 +238,8 @@ frontend/
 - SÍ implementar code splitting con React.lazy
 - SÍ usar Tailwind para estilos
 - SÍ seguir principios de composición sobre herencia
+- **SÍ documentar componentes públicos con Storybook**
+- **SÍ usar JSDoc/TSDoc para documentar props**
 
 ## Testing
 
@@ -204,6 +248,7 @@ frontend/
 - **Integration tests**: Para event handlers y database
 - **Contract tests**: Para eventos compartidos
 - **API tests**: Para endpoints FastAPI (httpx + TestClient)
+- **Observability tests**: Para metrics, traces, logs estructurados ✅
 - **Coverage**: Mínimo 80% de cobertura
 
 ### Frontend (React)
@@ -212,6 +257,13 @@ frontend/
 - **Integration tests**: Para flujos completos
 - **E2E tests**: Para user journeys críticos (Playwright - opcional)
 - **Coverage**: Mínimo 70% de cobertura
+
+### Testing de Observabilidad (OBLIGATORIO)
+- **Metric emission tests**: Verificar que métricas se emiten correctamente
+- **Span creation tests**: Verificar que spans se crean para operaciones
+- **Structured log tests**: Verificar formato JSON y campos obligatorios
+- **Context propagation tests**: Verificar trace context se propaga
+- **Health check tests**: Verificar endpoint `/health` responde correctamente
 
 ## Documentación Requerida
 
