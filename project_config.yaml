@@ -3,3 +3,21 @@ project_metrics:
   backlog_tasks_count: 0          # Número de tareas en backlog (Actualizar manualmente).
   qa_tasks_pending_count: 0       # Número de tareas pendientes en QA (Actualizar manualmente).
   qa_tasks_in_progress_count: 0   # Número de tareas en curso en QA (Actualizar manualmente).
+
+# Configuración de soporte de idiomas para documentación
+documentation:
+  languages:
+    default: es                    # Idioma por defecto para la documentación
+    supported:                     # Lista de idiomas soportados
+      - es                         # Español
+      - en                         # Inglés
+  environments:
+    development:
+      language: es                 # Idioma para entorno de desarrollo
+      fallback_language: en        # Idioma de respaldo si no está disponible
+    staging:
+      language: es                 # Idioma para entorno de staging
+      fallback_language: en        # Idioma de respaldo si no está disponible
+    production:
+      language: es                 # Idioma para entorno de producción
+      fallback_language: en        # Idioma de respaldo si no está disponible
